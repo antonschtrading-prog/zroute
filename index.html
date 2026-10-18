@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Калькулятор отряда Z Route: Redemption — бонус фракции и оценка урона для любой пятёрки UR-героев.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+
+<title>Калькулятор отряда Z Route</title>
+<style>
+:root{
+  --bg:#13161a; --surf:#1b1f25; --surf2:#232931; --line:#333b45;
+  --fg:#e8e4dc; --mut:#929ba6; --dim:#6b7580;
+  --acc:#d9822b; --acc2:#f0a860;
+  --war:#d9822b; --tac:#3fa9c9; --ass:#a874d4;
+  --good:#5fb87a; --warn:#d9a62b; --bad:#d4584f;
+  --ff-d:'Barlow Condensed','Oswald','Arial Narrow',system-ui,sans-serif;
+  --ff-b:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --ff-m:'IBM Plex Mono',ui-monospace,'SF Mono',Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f2efe9; --surf:#fffdf9; --surf2:#e9e5dd; --line:#d2ccc1;
+  --fg:#1e2126; --mut:#5d646d; --dim:#868d96;
+  --acc:#a85d14; --acc2:#8a4c10;
+  --war:#a85d14; --tac:#1d6f8a; --ass:#7446a3;
+  --good:#2f7d4a; --warn:#8a6a10; --bad:#a83a32;
+  color-scheme:light;
+}}
+:root[data-theme="dark"]{
+  --bg:#13161a; --surf:#1b1f25; --surf2:#232931; --line:#333b45;
+  --fg:#e8e4dc; --mut:#929ba6; --dim:#6b7580;
+  --acc:#d9822b; --acc2:#f0a860;
+  --war:#d9822b; --tac:#3fa9c9; --ass:#a874d4;
+  --good:#5fb87a; --warn:#d9a62b; --bad:#d4584f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--ff-b);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+h1,h2,h3{font-family:var(--ff-d);text-wrap:balance;margin:0;letter-spacing:.01em}
+h1{font-size:clamp(26px,5.6vw,40px);font-weight:700;line-height:1.04;text-transform:uppercase}
+h2{font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--acc2)}
+.num{font-family:var(--ff-m);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--ff-d);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600}
+
+header.top{padding-block:32px 20px;border-bottom:3px solid var(--acc)}
+.sub{color:var(--mut);max-width:60ch;margin-top:9px;font-size:14px}
+
+.calc{background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:16px;margin-top:22px}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:11px}
+.slot{display:flex;flex-direction:column;gap:5px;min-width:0}
+.slot label{font-family:var(--ff-d);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+select{width:100%;background:var(--surf2);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:8px 9px;font-family:var(--ff-b);font-size:14.5px}
+select:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.srcrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:13px;border-top:1px dashed var(--line)}
+.srcrow label{font-family:var(--ff-d);font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
+.srcrow select{width:auto;min-width:188px}
+.srcrow .hint{font-size:12.5px;color:var(--dim);flex:1;min-width:180px}
+.presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+button.p{background:var(--surf2);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:6px 11px;font-family:var(--ff-b);font-size:13px;cursor:pointer}
+button.p:hover{border-color:var(--acc);color:var(--acc2)}
+button.p:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+button.p.on{background:var(--acc);color:#15181c;border-color:var(--acc);font-weight:600}
+
+.out{display:grid;grid-template-columns:repeat(auto-fit,minmax(144px,1fr));gap:11px;margin-top:19px}
+.stat{background:var(--surf2);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:2px;padding:11px 13px;min-width:0}
+.stat .k{font-family:var(--ff-d);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.stat .v{font-family:var(--ff-m);font-size:21px;font-weight:600;margin-top:3px;line-height:1.15;word-break:break-word}
+.stat .n{font-size:12.5px;color:var(--mut);margin-top:3px}
+
+.bars{margin-top:17px;display:flex;flex-direction:column;gap:7px}
+.bar{display:grid;grid-template-columns:100px 1fr 90px;gap:10px;align-items:center;font-size:13.5px}
+.bar .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .tr{background:var(--surf2);height:17px;border-radius:2px;overflow:hidden;min-width:0}
+.bar .fl{height:100%}
+.bar .vv{text-align:right;font-family:var(--ff-m);font-size:12.5px;color:var(--mut)}
+
+.flags{margin-top:15px;display:flex;flex-direction:column;gap:7px}
+.flag{border-left:3px solid var(--mut);background:var(--surf2);padding:8px 12px;font-size:13.5px;border-radius:2px}
+.flag.ok{border-left-color:var(--good)}
+.flag.wa{border-left-color:var(--warn)}
+.flag.er{border-left-color:var(--bad)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr));gap:12px;margin-top:14px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:13px 15px}
+.card h3{font-size:14px;margin-bottom:6px;color:var(--acc2);text-transform:uppercase;letter-spacing:.05em}
+.card p{margin:0;font-size:13px;color:var(--mut)}
+.card .num{color:var(--fg)}
+.block{margin-top:30px}
+.note{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:3px;padding:12px 15px;margin-top:14px;font-size:13.5px}
+.note p{margin:0 0 7px}.note p:last-child{margin-bottom:0}
+.note strong{color:var(--acc2)}
+.nojs{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--bad);border-radius:3px;padding:14px 16px;margin-top:22px}
+.nojs h2{color:var(--bad);margin-bottom:7px}
+.nojs p{margin:0 0 9px;font-size:13.5px;color:var(--mut)}
+.nojs p:last-child{margin-bottom:0}
+.nojs strong{color:var(--fg)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:3px;margin-top:12px}
+table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:0}
+th{background:var(--surf2);font-family:var(--ff-d);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:8px 9px;color:var(--mut);white-space:nowrap;border-bottom:1px solid var(--line)}
+td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-family:var(--ff-m);font-variant-numeric:tabular-nums;white-space:nowrap}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
+@media (max-width:560px){
+  .bar{grid-template-columns:80px 1fr 74px;font-size:12.5px}
+  .stat .v{font-size:18px}
+}
+</style>
+<noscript><style>.calc{display:none}</style></noscript>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">Z Route: Redemption</div>
+  <h1>Калькулятор отряда</h1>
+  <p class="sub">Соберите пятёрку из UR-героев — расчёт покажет бонус фракции, оценку урона с разбивкой по героям и подсветит ошибки сборки.</p>
+</header>
+
+<noscript>
+<div class="nojs">
+  <h2>Калькулятор не запустился</h2>
+  <p>Файл открыт в режиме просмотра, который не выполняет скрипты — так делает встроенный просмотр «Файлов» на iPhone. <strong>Откройте этот же файл в браузере</strong> (Chrome, Safari, Яндекс), и калькулятор заработает.</p>
+  <p>А пока — готовые составы с уже посчитанными числами:</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Состав</th><th>Герои</th><th>Бонус</th><th>Урон</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Двойной Hero Pass</strong></td><td style="color:var(--mut)">Арнольд, Дирк, Монро, Катя, Люциан</td><td class="n">+20%</td><td class="n">1&#8239;085&#8239;882</td></tr>
+      <tr><td><strong>Ваш текущий</strong></td><td style="color:var(--mut)">Арнольд, Дирк, Монро, Люциан, Картер</td><td class="n">+20%</td><td class="n">1&#8239;075&#8239;166</td></tr>
+      <tr><td><strong>Iron Wall</strong></td><td style="color:var(--mut)">Арнольд, Бекка, Монро, Картер, Люциан</td><td class="n">+15%</td><td class="n">1&#8239;051&#8239;342</td></tr>
+      <tr><td><strong>Hero Pass Katya</strong></td><td style="color:var(--mut)">Арнольд, Дирк, Монро, Катя, Картер</td><td class="n">+20%</td><td class="n">1&#8239;035&#8239;337</td></tr>
+      <tr><td><strong>Tactical Elite</strong></td><td style="color:var(--mut)">Винс, Бекка, Монро, Лия, Картер</td><td class="n">+10%</td><td class="n">990&#8239;050</td></tr>
+      <tr><td><strong>Dual Core</strong></td><td style="color:var(--mut)">Арнольд, Бекка, Монро, Лия, Картер</td><td class="n">+10%</td><td class="n">986&#8239;702</td></tr>
+      <tr><td><strong>Assault Core</strong></td><td style="color:var(--mut)">Арнольд, Винс, Яна, Витторе, Сайлас</td><td class="n">+5%</td><td class="n">744&#8239;227</td></tr>
+    </tbody>
+  </table></div>
+</div>
+</noscript>
+
+<div class="calc">
+  <div class="slots" id="slots"></div>
+  <div class="srcrow">
+    <label for="src">Спорные фракции</label>
+    <select id="src">
+      <option value="site">По сайту zrouteops</option>
+      <option value="wiki">По фан-вики</option>
+    </select>
+    <span class="hint">Источники расходятся по Кате, Сайласу и Винсу. Выберите тот, что совпадает с игрой.</span>
+  </div>
+  <div class="presets" id="presets"></div>
+  <div class="out" id="out"></div>
+  <div class="bars" id="bars"></div>
+  <div class="flags" id="flags"></div>
+</div>
+
+<div class="block">
+  <h2>Ступени бонуса фракции</h2>
+  <div class="cards">
+    <div class="card"><h3>5 одной фракции</h3><p><span class="num">+20%</span> к АТК, ЗАЩ и ОЗ всему отряду. Единственная ступень, подтверждённая первоисточником.</p></div>
+    <div class="card"><h3>4 одной фракции</h3><p><span class="num">+15%</span>. Размен на сильного героя чужой фракции стоит около <span class="num">4%</span> урона.</p></div>
+    <div class="card"><h3>3 + 2</h3><p><span class="num">+10%</span>. Схема для гибридных ядер, когда собраны оба.</p></div>
+    <div class="card"><h3>3 одной фракции</h3><p><span class="num">+5%</span>. Ступени ниже пяти — данные сторонних гайдов.</p></div>
+  </div>
+</div>
+
+<div class="note">
+  <p><strong>Как читать оценку урона.</strong> Она строится на расчётах фан-вики для героев <em>максимального уровня и звёзд</em>: это сравнение потолков, а не вашего аккаунта. Относительный порядок составов надёжнее, чем абсолютные числа.</p>
+  <p><strong>Картер</strong> считается отдельно — свой урон у него небольшой, но навык даёт <span class="num">+16,5%</span> всему отряду, поэтому вклад зависит от того, кого он усиливает.</p>
+  <p><strong>Катя</strong> срезает защиту цели накопительно до <span class="num">−25%</span>, и от этого сильнее бьют все остальные. Расчёт этого не учитывает: в паре с Монро её реальная ценность выше показанной.</p>
+</div>
+
+<footer>
+  Данные: zrouteops.com (код сайта на 18.10.2026) и расчёты урона фан-вики Z&nbsp;Route: Redemption. Герои Вера и Николь есть только в вики и в расчёт не включены.
+</footer>
+
+</div>
+
+<script>
+const H=[
+ {id:"arnold",ru:"Арнольд",f:"w",role:"Танк",pos:"front",dmg:"Физ.",dps:40752},
+ {id:"monroe",ru:"Монро",f:"w",role:"ДПС",pos:"back",dmg:"Физ.",dps:389096},
+ {id:"dirk",ru:"Дирк",f:"w",role:"Танк",pos:"front",dmg:"Физ.",dps:36176},
+ {id:"carter",ru:"Картер",f:"w",role:"Поддержка",pos:"back",dmg:"Радиац.",dps:null},
+ {id:"bekka",ru:"Бекка",f:"t",role:"Танк",pos:"front",dmg:"Физ.",dps:51685},
+ {id:"leah",ru:"Лия",f:"t",role:"ДПС",pos:"back",dmg:"Радиац.",dps:218918},
+ {id:"vince",ru:"Винс",f:"t",role:"Танк",pos:"front",dmg:"Физ.",dps:43340},
+ {id:"lucian",ru:"Люциан",f:"w",role:"ДПС",pos:"back",dmg:"Радиац.",dps:233551},
+ {id:"katya",ru:"Катя",f:"w",role:"ДПС",pos:"back",dmg:"Физ.",dps:205327},
+ {id:"virgilio",ru:"Вирджилио",f:"t",role:"Танк",pos:"front",dmg:"Физ.",dps:11534},
+ {id:"yana",ru:"Яна",f:"a",role:"ДПС",pos:"back",dmg:"Радиац.",dps:221933},
+ {id:"victor",ru:"Витторе",f:"a",role:"ДПС",pos:"back",dmg:"Физ.",dps:168504},
+ {id:"silas",ru:"Сайлас",f:"a",role:"ДПС",pos:"back",dmg:"Радиац.",dps:234259}
+];
+// Фракции, по которым сайт и вики расходятся
+const ALT={katya:"t",silas:"t",vince:"a"};
+const FN={w:"Warrior",t:"Tactical",a:"Assault"};
+const CARTER_AUTO=62306, CARTER_K=0.176;
+const byId=id=>H.find(h=>h.id===id);
+const fmt=n=>Math.round(n).toLocaleString("ru-RU").replace(/ /g," ");
+const srcSel=document.getElementById("src");
+const fac=h=>srcSel.value==="wiki"?(ALT[h.id]||h.f):h.f;
+
+const PRE=[
+ {n:"Ваш текущий",s:["arnold","dirk","monroe","lucian","carter"]},
+ {n:"Hero Pass Katya",s:["arnold","dirk","monroe","katya","carter"]},
+ {n:"Двойной Hero Pass",s:["arnold","dirk","monroe","katya","lucian"]},
+ {n:"Warrior Core",s:["arnold","dirk","monroe","carter","lucian"]},
+ {n:"Dual Core",s:["arnold","bekka","monroe","leah","carter"]},
+ {n:"Iron Wall",s:["arnold","bekka","monroe","carter","lucian"]},
+ {n:"Tactical Elite",s:["vince","bekka","monroe","leah","carter"]},
+ {n:"Assault Core",s:["arnold","vince","yana","victor","silas"]}
+];
+
+const SL=[["f1","Фронт 1"],["f2","Фронт 2"],["b1","Тыл 1"],["b2","Тыл 2"],["b3","Тыл 3"]];
+const slots=document.getElementById("slots");
+SL.forEach(([id,lb])=>{
+  const d=document.createElement("div");d.className="slot";
+  const l=document.createElement("label");l.setAttribute("for",id);l.textContent=lb;
+  const s=document.createElement("select");s.id=id;
+  H.forEach(h=>{const o=document.createElement("option");o.value=h.id;o.textContent=h.ru+" · "+h.role;s.appendChild(o);});
+  s.addEventListener("change",()=>calc());
+  d.append(l,s);slots.appendChild(d);
+});
+
+const pw=document.getElementById("presets");
+let activePreset=0;
+PRE.forEach((p,i)=>{
+  const b=document.createElement("button");b.className="p";b.type="button";b.textContent=p.n;
+  b.addEventListener("click",()=>{SL.forEach(([id],k)=>document.getElementById(id).value=p.s[k]);calc(i);});
+  pw.appendChild(b);
+});
+srcSel.addEventListener("change",()=>calc(activePreset));
+
+function multiplier(c){
+  const m=Math.max(...Object.values(c));
+  if(m===5)return[1.20,"+20%","пять одной фракции"];
+  if(m===4)return[1.15,"+15%","четыре одной фракции"];
+  if(m===3){const rest=Object.values(c).filter(v=>v!==m);
+    return rest.includes(2)?[1.10,"+10%","схема 3 + 2"]:[1.05,"+5%","три одной фракции"];}
+  return[1.00,"0%","бонуса нет"];
+}
+
+function calc(active){
+  if(active!==undefined)activePreset=active;
+  const ids=SL.map(([id])=>document.getElementById(id).value);
+  const sq=ids.map(byId);
+  const cnt={w:0,t:0,a:0};sq.forEach(h=>cnt[fac(h)]++);
+  const [mult,pct,fdesc]=multiplier(cnt);
+
+  const others=sq.filter(h=>h.id!=="carter").reduce((s,h)=>s+h.dps,0);
+  const hasC=sq.some(h=>h.id==="carter");
+  const base=hasC?others+CARTER_AUTO:others;
+  const buff=hasC?base*CARTER_K:0;
+  const total=(base+buff)*mult;
+
+  document.getElementById("out").innerHTML=`
+    <div class="stat"><div class="k">Бонус фракции</div><div class="v">${pct}</div><div class="n">${fdesc}</div></div>
+    <div class="stat"><div class="k">Состав</div><div class="v" style="font-size:15px;font-family:var(--ff-b)">${cnt.w}W · ${cnt.t}T · ${cnt.a}A</div><div class="n">Warrior · Tactical · Assault</div></div>
+    <div class="stat"><div class="k">Урон отряда</div><div class="v">${fmt(total)}</div><div class="n">ед/сек при макс. прокачке</div></div>
+    <div class="stat"><div class="k">Без бонуса</div><div class="v">${fmt(base+buff)}</div><div class="n">бонус даёт +${fmt(total-base-buff)}</div></div>`;
+
+  const parts=sq.map(h=>({nm:h.ru,f:fac(h),v:h.id==="carter"?CARTER_AUTO+buff:h.dps}));
+  const mx=Math.max(...parts.map(p=>p.v))||1;
+  document.getElementById("bars").innerHTML=parts.sort((a,b)=>b.v-a.v).map(p=>{
+    const col=p.f==="w"?"var(--war)":p.f==="t"?"var(--tac)":"var(--ass)";
+    return `<div class="bar"><div class="nm">${p.nm}</div><div class="tr"><div class="fl" style="width:${(p.v/mx*100).toFixed(1)}%;background:${col}"></div></div><div class="vv">${fmt(p.v*mult)}</div></div>`;
+  }).join("");
+
+  const fl=[];
+  const fw=sq.slice(0,2).filter(h=>h.pos!=="front").map(h=>h.ru);
+  const bw=sq.slice(2).filter(h=>h.pos!=="back").map(h=>h.ru);
+  if(fw.length)fl.push(["er",`${fw.join(" и ")} — тыловой герой на фронте. Он не держит удар.`]);
+  if(bw.length)fl.push(["er",`${bw.join(" и ")} — танк в тылу. Его защита пропадает зря.`]);
+  if(new Set(ids).size<5)fl.push(["er","Один герой выбран дважды — состав неполный."]);
+  const tanks=sq.filter(h=>h.role==="Танк").length;
+  if(tanks===0)fl.push(["wa","В отряде нет танков. Стеклянный состав разваливается под бурстом."]);
+  if(mult===1.20)fl.push(["ok","Моно-состав: максимальный бонус фракции."]);
+  else if(cnt.w===4||cnt.t===4||cnt.a===4)fl.push(["wa","Четыре из пяти. До максимума не хватает одного героя нужной фракции — размен стоит около 4% урона."]);
+  if(hasC)fl.push(["ok",`Картер усиливает отряд на +16,5%: это ${fmt(buff*mult)} ед/сек сверх его собственного урона.`]);
+  if(sq.some(h=>h.id==="katya")&&sq.some(h=>h.id==="monroe"))fl.push(["ok","Связка Монро + Катя: срез защиты до −25%, и Монро бьёт сильнее. В расчёт это не входит, реальный урон выше."]);
+  const rad=sq.filter(h=>h.dmg==="Радиац.").length;
+  if(rad===0)fl.push(["wa","Весь урон физический. Соперник с физ-резистом закроется одним типом защиты."]);
+  if(rad===5)fl.push(["wa","Весь урон радиационный — та же уязвимость, только наоборот."]);
+  document.getElementById("flags").innerHTML=fl.map(([c,t])=>`<div class="flag ${c}">${t}</div>`).join("");
+
+  [...pw.children].forEach((b,i)=>b.classList.toggle("on",i===activePreset));
+}
+
+SL.forEach(([id],k)=>document.getElementById(id).value=PRE[0].s[k]);
+calc(0);
+</script>
+</body>
+</html>
