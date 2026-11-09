@@ -1,4 +1,4 @@
-const CACHE = "zroute-v3";
+const CACHE = "zroute-v4";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./fonts/fonts.css", "./fonts/font-1.ttf", "./fonts/font-2.ttf", "./fonts/font-3.ttf", "./fonts/font-4.ttf", "./fonts/font-5.ttf", "./fonts/font-6.ttf", "./fonts/font-7.ttf", "./fonts/font-8.ttf"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
