@@ -1,0 +1,13 @@
+{
+  "name": "Калькулятор отряда Z Route",
+  "short_name": "Z Route",
+  "description": "Подбор пятёрки героев с учётом прокачки и снаряжения.",
+  "lang": "ru",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#13161a",
+  "theme_color": "#13161a",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+  ]
+}

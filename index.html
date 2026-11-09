@@ -3,189 +3,216 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Калькулятор отряда Z Route: Redemption — бонус фракции и оценка урона для любой пятёрки UR-героев.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
-
+<meta name="description" content="Калькулятор отряда Z Route: Redemption — прокачка героев, снаряжение и автоподбор пятёрки для PvP и PvE.">
+<meta name="theme-color" content="#13161a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/fonts.css">
 <title>Калькулятор отряда Z Route</title>
 <style>
 :root{
-  --bg:#13161a; --surf:#1b1f25; --surf2:#232931; --line:#333b45;
-  --fg:#e8e4dc; --mut:#929ba6; --dim:#6b7580;
-  --acc:#d9822b; --acc2:#f0a860;
-  --war:#d9822b; --tac:#3fa9c9; --ass:#a874d4;
-  --good:#5fb87a; --warn:#d9a62b; --bad:#d4584f;
+  --bg:#13161a;--surf:#1b1f25;--surf2:#232931;--line:#333b45;
+  --fg:#e8e4dc;--mut:#929ba6;--dim:#6b7580;
+  --acc:#d9822b;--acc2:#f0a860;
+  --war:#d9822b;--tac:#3fa9c9;--ass:#a874d4;
+  --good:#5fb87a;--warn:#d9a62b;--bad:#d4584f;
   --ff-d:'Barlow Condensed','Oswald','Arial Narrow',system-ui,sans-serif;
   --ff-b:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --ff-m:'IBM Plex Mono',ui-monospace,'SF Mono',Consolas,monospace;
   color-scheme:dark;
 }
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
-  --bg:#f2efe9; --surf:#fffdf9; --surf2:#e9e5dd; --line:#d2ccc1;
-  --fg:#1e2126; --mut:#5d646d; --dim:#868d96;
-  --acc:#a85d14; --acc2:#8a4c10;
-  --war:#a85d14; --tac:#1d6f8a; --ass:#7446a3;
-  --good:#2f7d4a; --warn:#8a6a10; --bad:#a83a32;
+  --bg:#f2efe9;--surf:#fffdf9;--surf2:#e9e5dd;--line:#d2ccc1;
+  --fg:#1e2126;--mut:#5d646d;--dim:#868d96;
+  --acc:#a85d14;--acc2:#8a4c10;
+  --war:#a85d14;--tac:#1d6f8a;--ass:#7446a3;
+  --good:#2f7d4a;--warn:#8a6a10;--bad:#a83a32;
   color-scheme:light;
 }}
-:root[data-theme="dark"]{
-  --bg:#13161a; --surf:#1b1f25; --surf2:#232931; --line:#333b45;
-  --fg:#e8e4dc; --mut:#929ba6; --dim:#6b7580;
-  --acc:#d9822b; --acc2:#f0a860;
-  --war:#d9822b; --tac:#3fa9c9; --ass:#a874d4;
-  --good:#5fb87a; --warn:#d9a62b; --bad:#d4584f;
-  color-scheme:dark;
-}
+:root[data-theme="dark"]{--bg:#13161a;--surf:#1b1f25;--surf2:#232931;--line:#333b45;--fg:#e8e4dc;--mut:#929ba6;--dim:#6b7580;--acc:#d9822b;--acc2:#f0a860;--war:#d9822b;--tac:#3fa9c9;--ass:#a874d4;--good:#5fb87a;--warn:#d9a62b;--bad:#d4584f;color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--ff-b);font-size:15px;line-height:1.5;margin:0}
-.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--ff-b);font-size:15px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}
+button,a,input,select,summary{-webkit-tap-highlight-color:transparent}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
 h1,h2,h3{font-family:var(--ff-d);text-wrap:balance;margin:0;letter-spacing:.01em}
 h1{font-size:clamp(26px,5.6vw,40px);font-weight:700;line-height:1.04;text-transform:uppercase}
 h2{font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--acc2)}
 .num{font-family:var(--ff-m);font-variant-numeric:tabular-nums}
 .eyebrow{font-family:var(--ff-d);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:600}
-
 header.top{padding-block:32px 20px;border-bottom:3px solid var(--acc)}
-.sub{color:var(--mut);max-width:60ch;margin-top:9px;font-size:14px}
-
+.sub{color:var(--mut);max-width:68ch;margin:9px 0 0;font-size:14px}
 .calc{background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:16px;margin-top:22px}
-.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:11px}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:11px;align-items:start}
 .slot{display:flex;flex-direction:column;gap:5px;min-width:0}
-.slot label{font-family:var(--ff-d);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
-select{width:100%;background:var(--surf2);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:8px 9px;font-family:var(--ff-b);font-size:14.5px}
-select:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.slot>label,.field>span,.srcrow>label{font-family:var(--ff-d);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+select,input[type=number]{width:100%;background:var(--surf2);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:8px 9px;font-family:var(--ff-b);font-size:14px;min-height:38px}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--acc);margin:0}
+select:focus-visible,input:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+input:disabled{opacity:.45;cursor:not-allowed}
+.setup{border-top:1px dashed var(--line);margin-top:3px;padding-top:5px}
+.setup summary{cursor:pointer;color:var(--mut);font-family:var(--ff-m);font-size:11px;line-height:1.4;list-style-position:inside;min-height:28px}
+.setup summary::marker{color:var(--acc)}
+.setup[open] summary{color:var(--acc2);margin-bottom:8px}
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.field{display:flex;flex-direction:column;gap:3px;min-width:0}
+.field>span{font-size:10px;letter-spacing:.06em}
+.field select,.field input[type=number]{font-size:12px;padding:6px;min-height:34px}
+.field.wide{grid-column:1/-1}
+.gear-step-note{font-size:10.5px;color:var(--dim);margin-top:5px;min-height:16px}
 .srcrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;padding-top:13px;border-top:1px dashed var(--line)}
-.srcrow label{font-family:var(--ff-d);font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
 .srcrow select{width:auto;min-width:188px}
 .srcrow .hint{font-size:12.5px;color:var(--dim);flex:1;min-width:180px}
 .presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
-button.p{background:var(--surf2);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:6px 11px;font-family:var(--ff-b);font-size:13px;cursor:pointer}
-button.p:hover{border-color:var(--acc);color:var(--acc2)}
-button.p:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
-button.p.on{background:var(--acc);color:#15181c;border-color:var(--acc);font-weight:600}
-
+button.p,button.action,.mode button{background:var(--surf2);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:7px 11px;font-family:var(--ff-b);font-size:13px;cursor:pointer;min-height:36px}
+button.p:hover,button.action:hover,.mode button:hover{border-color:var(--acc);color:var(--acc2)}
+button.p.on,.mode button.on{background:var(--acc);color:#15181c;border-color:var(--acc);font-weight:600}
+button.action.primary{background:var(--acc);border-color:var(--acc);color:#15181c;font-weight:600;padding-inline:15px}
+button.action.primary:hover{background:var(--acc2)}
+.optimizer{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:12px;margin-top:17px;padding-block:14px;border-block:1px solid var(--line)}
+.mode{display:inline-flex;gap:0}
+.mode button{min-width:70px;border-radius:0}
+.mode button:first-child{border-radius:2px 0 0 2px}
+.mode button:last-child{border-radius:0 2px 2px 0;margin-left:-1px}
+.opt-copy{font-size:12.5px;color:var(--mut);min-width:0}
+.opt-copy a{color:var(--acc2);text-decoration:none;border-bottom:1px dotted var(--acc)}
+#recommendation{grid-column:1/-1;color:var(--good);font-size:13px;min-height:0}
+#recommendation:empty{display:none}
+#recommendation.err{color:var(--bad)}
 .out{display:grid;grid-template-columns:repeat(auto-fit,minmax(144px,1fr));gap:11px;margin-top:19px}
 .stat{background:var(--surf2);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:2px;padding:11px 13px;min-width:0}
 .stat .k{font-family:var(--ff-d);font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
 .stat .v{font-family:var(--ff-m);font-size:21px;font-weight:600;margin-top:3px;line-height:1.15;word-break:break-word}
 .stat .n{font-size:12.5px;color:var(--mut);margin-top:3px}
-
 .bars{margin-top:17px;display:flex;flex-direction:column;gap:7px}
 .bar{display:grid;grid-template-columns:100px 1fr 90px;gap:10px;align-items:center;font-size:13.5px}
 .bar .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bar .tr{background:var(--surf2);height:17px;border-radius:2px;overflow:hidden;min-width:0}
 .bar .fl{height:100%}
 .bar .vv{text-align:right;font-family:var(--ff-m);font-size:12.5px;color:var(--mut)}
-
 .flags{margin-top:15px;display:flex;flex-direction:column;gap:7px}
+.flags:empty{display:none}
 .flag{border-left:3px solid var(--mut);background:var(--surf2);padding:8px 12px;font-size:13.5px;border-radius:2px}
-.flag.ok{border-left-color:var(--good)}
-.flag.wa{border-left-color:var(--warn)}
-.flag.er{border-left-color:var(--bad)}
-
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr));gap:12px;margin-top:14px}
+.flag.ok{border-left-color:var(--good)}.flag.wa{border-left-color:var(--warn)}.flag.er{border-left-color:var(--bad)}
+.block{margin-top:30px}
+.sectionhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sectionhead .count{font-family:var(--ff-m);font-size:12.5px;color:var(--mut)}
+.roster-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:13px}
+.roster-row{display:grid;grid-template-columns:24px minmax(92px,1fr) 74px 68px;gap:7px;align-items:end;background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:10px}
+.roster-row.selected{border-color:var(--acc)}
+.own{align-self:center;display:flex;align-items:center;justify-content:center;min-height:36px}
+.roster-name{font-weight:600;align-self:center;min-width:0}
+.roster-name small{display:block;font-weight:400;color:var(--dim);font-size:11px}
+.roster-row .field>span{font-size:9.5px}
+.roster-row .gear{grid-column:2/4}
+.roster-row .gear-step{grid-column:4}
+.roster-row .gear-note{grid-column:2/-1;font-size:10.5px;color:var(--dim);margin-top:-3px}
+.roster-row .field select,.roster-row .field input{font-size:12px;padding:5px;min-height:32px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:14px}
 .card{background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:13px 15px}
 .card h3{font-size:14px;margin-bottom:6px;color:var(--acc2);text-transform:uppercase;letter-spacing:.05em}
-.card p{margin:0;font-size:13px;color:var(--mut)}
-.card .num{color:var(--fg)}
-.block{margin-top:30px}
+.card p{margin:0;font-size:13px;color:var(--mut)}.card .num{color:var(--fg)}
 .note{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:3px;padding:12px 15px;margin-top:14px;font-size:13.5px}
-.note p{margin:0 0 7px}.note p:last-child{margin-bottom:0}
-.note strong{color:var(--acc2)}
-.nojs{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--bad);border-radius:3px;padding:14px 16px;margin-top:22px}
-.nojs h2{color:var(--bad);margin-bottom:7px}
-.nojs p{margin:0 0 9px;font-size:13.5px;color:var(--mut)}
-.nojs p:last-child{margin-bottom:0}
-.nojs strong{color:var(--fg)}
-.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:3px;margin-top:12px}
-table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:0}
+.note p{margin:0 0 7px}.note p:last-child{margin-bottom:0}.note strong{color:var(--acc2)}
+details.method{margin-top:14px;background:var(--surf);border:1px solid var(--line);border-radius:3px;padding:11px 14px}
+details.method summary,details.hero-details summary{cursor:pointer;color:var(--acc2);font-family:var(--ff-d);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+details.method p{font-size:13px;color:var(--mut);margin:10px 0 0}
+details.hero-details{margin-top:16px}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:3px;margin-top:12px;overscroll-behavior-x:contain}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
 th{background:var(--surf2);font-family:var(--ff-d);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:8px 9px;color:var(--mut);white-space:nowrap;border-bottom:1px solid var(--line)}
-td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
-tbody tr:last-child td{border-bottom:none}
-td.n{font-family:var(--ff-m);font-variant-numeric:tabular-nums;white-space:nowrap}
+td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}td.n{font-family:var(--ff-m);font-variant-numeric:tabular-nums}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
+.nojs{background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--bad);padding:14px 16px;margin-top:22px}.nojs h2{color:var(--bad);margin-bottom:7px}.nojs p{margin:0;color:var(--mut)}
+@media (max-width:760px){.optimizer{grid-template-columns:1fr 1fr}.opt-copy{grid-column:1/-1}.roster{grid-template-columns:1fr}}
 @media (max-width:560px){
-  .bar{grid-template-columns:80px 1fr 74px;font-size:12.5px}
-  .stat .v{font-size:18px}
+  .calc{padding:13px}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bar{grid-template-columns:80px 1fr 74px;font-size:12.5px}.stat .v{font-size:18px}
+  .optimizer{grid-template-columns:1fr}.mode{width:100%}.mode button{flex:1}.optimizer .primary{width:100%}
+  .srcrow select{width:100%}.srcrow .hint{min-width:0}
+  .roster-row{grid-template-columns:22px minmax(78px,1fr) 66px 62px;padding:8px;gap:6px}
 }
+@media (max-width:360px){.slots{grid-template-columns:1fr}.roster-row{grid-template-columns:22px minmax(72px,1fr) 60px 56px}}
 </style>
-<noscript><style>.calc{display:none}</style></noscript>
+<noscript><style>.calc,.block,details.method{display:none}</style></noscript>
 </head>
 <body>
-
 <div class="wrap">
-
 <header class="top">
   <div class="eyebrow">Z Route: Redemption</div>
   <h1>Калькулятор отряда</h1>
-  <p class="sub">Соберите пятёрку из UR-героев — расчёт покажет бонус фракции, оценку урона с разбивкой по героям и подсветит ошибки сборки.</p>
+  <p class="sub">Соберите пятёрку из UR-героев, настройте их прокачку и снаряжение или отметьте имеющихся героев для автоподбора PvP/PvE.</p>
 </header>
+<noscript><div class="nojs"><h2>Калькулятор не запустился</h2><p>Откройте этот файл в браузере с поддержкой JavaScript: Chrome, Safari или Яндекс. Все расчёты выполняются только на устройстве.</p></div></noscript>
 
-<noscript>
-<div class="nojs">
-  <h2>Калькулятор не запустился</h2>
-  <p>Файл открыт в режиме просмотра, который не выполняет скрипты — так делает встроенный просмотр «Файлов» на iPhone. <strong>Откройте этот же файл в браузере</strong> (Chrome, Safari, Яндекс), и калькулятор заработает.</p>
-  <p>А пока — готовые составы с уже посчитанными числами:</p>
-  <div class="scroll"><table>
-    <thead><tr><th>Состав</th><th>Герои</th><th>Бонус</th><th>Урон</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Двойной Hero Pass</strong></td><td style="color:var(--mut)">Арнольд, Дирк, Монро, Катя, Люциан</td><td class="n">+20%</td><td class="n">1&#8239;085&#8239;882</td></tr>
-      <tr><td><strong>Ваш текущий</strong></td><td style="color:var(--mut)">Арнольд, Дирк, Монро, Люциан, Картер</td><td class="n">+20%</td><td class="n">1&#8239;075&#8239;166</td></tr>
-      <tr><td><strong>Iron Wall</strong></td><td style="color:var(--mut)">Арнольд, Бекка, Монро, Картер, Люциан</td><td class="n">+15%</td><td class="n">1&#8239;051&#8239;342</td></tr>
-      <tr><td><strong>Hero Pass Katya</strong></td><td style="color:var(--mut)">Арнольд, Дирк, Монро, Катя, Картер</td><td class="n">+20%</td><td class="n">1&#8239;035&#8239;337</td></tr>
-      <tr><td><strong>Tactical Elite</strong></td><td style="color:var(--mut)">Винс, Бекка, Монро, Лия, Картер</td><td class="n">+10%</td><td class="n">990&#8239;050</td></tr>
-      <tr><td><strong>Dual Core</strong></td><td style="color:var(--mut)">Арнольд, Бекка, Монро, Лия, Картер</td><td class="n">+10%</td><td class="n">986&#8239;702</td></tr>
-      <tr><td><strong>Assault Core</strong></td><td style="color:var(--mut)">Арнольд, Винс, Яна, Витторе, Сайлас</td><td class="n">+5%</td><td class="n">744&#8239;227</td></tr>
-    </tbody>
-  </table></div>
-</div>
-</noscript>
-
-<div class="calc">
+<main>
+<section class="calc" aria-label="Расчёт отряда">
   <div class="slots" id="slots"></div>
   <div class="srcrow">
     <label for="src">Спорные фракции</label>
-    <select id="src">
-      <option value="site">По сайту zrouteops</option>
-      <option value="wiki">По фан-вики</option>
-    </select>
-    <span class="hint">Источники расходятся по Кате, Сайласу и Винсу. Выберите тот, что совпадает с игрой.</span>
+    <select id="src"><option value="site">По сайту zrouteops</option><option value="wiki">По фан-вики</option></select>
+    <span class="hint">Источники расходятся по Кате, Сайласу и Винсу. Выберите вариант, который совпадает с игрой.</span>
   </div>
-  <div class="presets" id="presets"></div>
+  <div class="presets" id="presets" aria-label="Готовые составы"></div>
+  <div class="optimizer">
+    <div class="mode" role="group" aria-label="Режим подбора">
+      <button type="button" data-mode="pvp" aria-pressed="true">PvP</button>
+      <button type="button" data-mode="pve" aria-pressed="false">PvE</button>
+    </div>
+    <button type="button" class="action primary" id="optimize">Подобрать из моих героев</button>
+    <div class="opt-copy"><a href="#roster" id="ownedLink">Отмечено: 0</a><br>PvP — игроки, PvE — зомби.</div>
+    <div id="recommendation" role="status" aria-live="polite"></div>
+  </div>
   <div class="out" id="out"></div>
   <div class="bars" id="bars"></div>
   <div class="flags" id="flags"></div>
-</div>
+  <details class="hero-details"><summary>Характеристики выбранных героев</summary><div class="scroll"><table>
+    <thead><tr><th>Герой</th><th>Прокачка</th><th>АТК</th><th>ОЗ</th><th>ЗАЩ</th><th>Снаряжение</th><th>Урон/сек</th></tr></thead><tbody id="heroStats"></tbody>
+  </table></div></details>
+</section>
 
-<div class="block">
+<section class="block" id="roster">
+  <div class="sectionhead"><h2>Мои герои</h2><span class="count" id="ownedCount">0 из 13</span></div>
+  <p class="sub">Отметьте «Есть» только у имеющихся героев и укажите их текущие данные. Автоподбор использует только эти отметки; обычные слоты выше доступны для любых теоретических составов.</p>
+  <div class="roster-actions"><button class="action" type="button" id="allOwned">Отметить всех</button><button class="action" type="button" id="noOwned">Снять отметки</button><button class="action" type="button" id="resetData">Сбросить прокачку</button></div>
+  <div class="roster" id="rosterGrid"></div>
+</section>
+
+<section class="block">
   <h2>Ступени бонуса фракции</h2>
   <div class="cards">
-    <div class="card"><h3>5 одной фракции</h3><p><span class="num">+20%</span> к АТК, ЗАЩ и ОЗ всему отряду. Единственная ступень, подтверждённая первоисточником.</p></div>
+    <div class="card"><h3>5 одной фракции</h3><p><span class="num">+20%</span> к АТК, ЗАЩ и ОЗ всего отряда. Единственная ступень, подтверждённая первоисточником.</p></div>
     <div class="card"><h3>4 одной фракции</h3><p><span class="num">+15%</span>. Размен на сильного героя чужой фракции стоит около <span class="num">4%</span> урона.</p></div>
     <div class="card"><h3>3 + 2</h3><p><span class="num">+10%</span>. Схема для гибридных ядер, когда собраны оба.</p></div>
     <div class="card"><h3>3 одной фракции</h3><p><span class="num">+5%</span>. Ступени ниже пяти — данные сторонних гайдов.</p></div>
   </div>
-</div>
+</section>
 
 <div class="note">
-  <p><strong>Как читать оценку урона.</strong> Она строится на расчётах фан-вики для героев <em>максимального уровня и звёзд</em>: это сравнение потолков, а не вашего аккаунта. Относительный порядок составов надёжнее, чем абсолютные числа.</p>
-  <p><strong>Картер</strong> считается отдельно — свой урон у него небольшой, но навык даёт <span class="num">+16,5%</span> всему отряду, поэтому вклад зависит от того, кого он усиливает.</p>
-  <p><strong>Катя</strong> срезает защиту цели накопительно до <span class="num">−25%</span>, и от этого сильнее бьют все остальные. Расчёт этого не учитывает: в паре с Монро её реальная ценность выше показанной.</p>
+  <p><strong>Это оценка, а не официальная игровая мощь.</strong> По умолчанию у всех героев 150 уровень, 5★ и максимальное обычное UR-снаряжение. Рейтинг не учитывает ресурсы прокачки, эксклюзивное оружие и бонусы аккаунта.</p>
+  <p><strong>PvP / PvE.</strong> PvP-подбор сочетает урон со стойкостью двух героев фронта. PvE-подбор максимизирует оценку урона по зомби и учитывает бонус «урон монстрам» на SSR-снаряжении.</p>
+  <p><strong>Картер.</strong> На 5★ его усиление из исходной фан-вики — +16,5% на 6 секунд. Расчёт усредняет его с учётом перезарядки, а не считает постоянным.</p>
+  <p><strong>Катя.</strong> Накопительное снижение защиты до −25% отдельно не моделируется: в паре с Монро её ценность может быть выше показанной.</p>
 </div>
-
-<footer>
-  Данные: zrouteops.com (код сайта на 18.10.2026) и расчёты урона фан-вики Z&nbsp;Route: Redemption. Герои Вера и Николь есть только в вики и в расчёт не включены.
-</footer>
-
+<details class="method"><summary>Как считается оценка</summary>
+  <p>Базовые значения урона на 150 уровне и 5★ взяты из исходной фан-вики. Изменение уровня, звёзд и снаряжения масштабирует их по справочным таблицам АТК и коэффициентам навыков. Для Витторе в PvE используется отдельная фан-оценка 90-секундного боя с гигантским захватчиком.</p>
+  <p>Формула базовых АТК/ОЗ/ЗАЩ: (бонус уровня + бонус звёзд) × коэффициент героя. Затем добавляются четыре слота обычного снаряжения, его процентные бонусы, бонус специальности и фракции. Шанс крита снаряжения учитывается в оценке урона; сопротивления, контроль и точный порядок атак не моделируются.</p>
+  <p>PvP-рейтинг автоподбора = оценка урона × (70% + 30% × нормированная стойкость фронта). Стойкость сравнивает ОЗ и ЗАЩ двух фронтовых героев с лучшей доступной парой. Это прозрачная эвристика для сортировки, а не формула боя из игры.</p>
+</details>
+</main>
+<footer>Данные: исходные расчёты фан-вики Z Route: Redemption и справочные таблицы стороннего калькулятора, сверенные с опубликованными характеристиками. Данные прокачки хранятся только в этом браузере: без синхронизации между устройствами; очистка данных браузера удалит их.</footer>
 </div>
 
 <script>
+const GAME={"heroes":{"arnold":{"gameId":10007,"base":{"hp":13442,"attack":8157,"defense":10522},"dpsRatio":[[0.143482,0.186526,0.273649,0.402226,0.645668,1.0],[0.143482,0.186526,0.273649,0.402226,0.645668,1.0],[0.143482,0.186526,0.273649,0.402226,0.645668,1.0],[0.143482,0.186526,0.273649,0.402226,0.645668,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":5.0},{"pct":0,"duration":6.0},{"pct":0,"duration":6.0},{"pct":0,"duration":7.0},{"pct":0,"duration":7.0},{"pct":0,"duration":8.0}],"cd":10.2,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"monroe":{"gameId":30006,"base":{"hp":5836,"attack":14893,"defense":9052},"dpsRatio":[[0.041287,0.053674,0.078559,0.11521,0.184331,0.284856],[0.097032,0.126142,0.187261,0.279389,0.463774,0.722517],[0.106444,0.142162,0.218159,0.336664,0.582037,0.942885],[0.106444,0.142162,0.218159,0.336664,0.617107,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0}],"cd":10.3,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"dirk":{"gameId":50001,"base":{"hp":13648,"attack":8075,"defense":10549},"dpsRatio":[[0.146515,0.190469,0.278094,0.406828,0.648649,1.0],[0.146515,0.190469,0.278094,0.406828,0.648649,1.0],[0.146515,0.190469,0.278094,0.406828,0.648649,1.0],[0.146515,0.190469,0.278094,0.406828,0.648649,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":6.0},{"pct":0,"duration":6.0},{"pct":0,"duration":8.0},{"pct":0,"duration":8.0},{"pct":0,"duration":8.0},{"pct":0,"duration":10.0}],"cd":10.3,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"carter":{"gameId":50002,"base":{"hp":7004,"attack":12958,"defense":9372},"dpsRatio":[[0.144569,0.18794,0.275242,0.403876,0.646736,1.0],[0.144569,0.18794,0.275242,0.403876,0.646736,1.0],[0.144569,0.18794,0.275242,0.403876,0.646736,1.0],[0.144569,0.18794,0.275242,0.403876,0.646736,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":6.45,"duration":6.0},{"pct":6.45,"duration":7.0},{"pct":7.05,"duration":7.0},{"pct":10.8,"duration":7.0},{"pct":12.3,"duration":8.0},{"pct":16.8,"duration":8.0}],"cd":12.3,"cool":[0.095,0.125,0.163,0.203,0.253,0.303]}},"bekka":{"gameId":50004,"base":{"hp":14281,"attack":7834,"defense":10629},"dpsRatio":[[0.142497,0.185234,0.272218,0.400743,0.6447,1.0],[0.142497,0.185234,0.272218,0.400743,0.6447,1.0],[0.142497,0.185234,0.272218,0.400743,0.6447,1.0],[0.142497,0.185234,0.272218,0.400743,0.6447,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":5.0},{"pct":0,"duration":5.0},{"pct":0,"duration":5.0},{"pct":0,"duration":5.0},{"pct":0,"duration":5.0},{"pct":0,"duration":5.0}],"cd":10.3,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"leah":{"gameId":50006,"base":{"hp":6415,"attack":13850,"defense":9217},"dpsRatio":[[0.047155,0.061307,0.089603,0.131203,0.209489,0.323282],[0.105477,0.137124,0.200662,0.2942,0.470584,0.72708],[0.115497,0.154264,0.23337,0.353922,0.589641,0.947385],[0.115497,0.154264,0.23337,0.353922,0.622357,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.095,0.125,0.163,0.203,0.253,0.303],[0.095,0.125,0.163,0.203,0.253,0.303]],"carter":{"buff":[{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0}],"cd":10.2,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"vince":{"gameId":50010,"base":{"hp":12672,"attack":8488,"defense":10418},"dpsRatio":[[0.14374,0.186862,0.274027,0.402618,0.64591,1.0],[0.14374,0.186862,0.274027,0.402618,0.64591,1.0],[0.14374,0.186862,0.274027,0.402618,0.64591,1.0],[0.14374,0.186862,0.274027,0.402618,0.64591,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":6.45,"duration":8.0},{"pct":8.45,"duration":8.0},{"pct":9.05,"duration":8.0},{"pct":11.8,"duration":8.0},{"pct":13.3,"duration":8.0},{"pct":16.8,"duration":8.0}],"cd":10.0,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"lucian":{"gameId":50003,"base":{"hp":5451,"attack":15706,"defense":8932},"dpsRatio":[[0.046313,0.060207,0.088698,0.130907,0.211354,0.328616],[0.102824,0.133671,0.200743,0.296546,0.471837,0.727565],[0.10961,0.146503,0.228446,0.350814,0.586494,0.948017],[0.10961,0.146503,0.228446,0.350814,0.618872,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.066,0.096,0.138,0.183,0.243,0.303],[0.066,0.096,0.138,0.183,0.243,0.303]],"carter":{"buff":[{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0}],"cd":10.1,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"katya":{"gameId":50008,"base":{"hp":6543,"attack":13642,"defense":9252},"dpsRatio":[[0.043178,0.056131,0.082852,0.122506,0.198311,0.308867],[0.093777,0.12191,0.195734,0.293357,0.458915,0.726305],[0.102592,0.137026,0.227443,0.352615,0.574562,0.945649],[0.102592,0.137026,0.227443,0.352615,0.60719,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":9.0},{"pct":0,"duration":9.0},{"pct":0,"duration":9.0},{"pct":0,"duration":9.0},{"pct":0,"duration":9.0},{"pct":0,"duration":9.0}],"cd":10.0,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"virgilio":{"gameId":50005,"base":{"hp":13104,"attack":8298,"defense":10477},"dpsRatio":[[0.140413,0.182536,0.269151,0.397569,0.642668,1.0],[0.140413,0.182536,0.269151,0.397569,0.642668,1.0],[0.140413,0.182536,0.269151,0.397569,0.642668,1.0],[0.140413,0.182536,0.269151,0.397569,0.642668,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":5.0},{"pct":0,"duration":6.0},{"pct":0,"duration":6.0},{"pct":0,"duration":7.0},{"pct":0,"duration":7.0},{"pct":0,"duration":8.0}],"cd":10.1,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"yana":{"gameId":50011,"base":{"hp":5689,"attack":15191,"defense":9007},"dpsRatio":[[0.048529,0.063093,0.092214,0.135026,0.215593,0.332701],[0.105837,0.137594,0.201247,0.29491,0.471374,0.727936],[0.115891,0.154793,0.23405,0.354777,0.590631,0.948501],[0.115891,0.154793,0.23405,0.354777,0.622681,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0}],"cd":10.1,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"victor":{"gameId":50012,"base":{"hp":6049,"attack":14487,"defense":9114},"dpsRatio":[[0.059454,0.077297,0.112973,0.165424,0.264128,0.4076],[0.128054,0.166477,0.216334,0.318019,0.482054,0.734745],[0.140219,0.187287,0.251597,0.382577,0.604013,0.957373],[0.140219,0.187287,0.251597,0.382577,0.63132,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.095,0.125,0.163,0.203,0.253,0.303],[0.095,0.125,0.163,0.203,0.253,0.303]],"carter":{"buff":[{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0},{"pct":0,"duration":0}],"cd":10.3,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}},"silas":{"gameId":50007,"base":{"hp":6030,"attack":14521,"defense":9109},"dpsRatio":[[0.048482,0.063027,0.09291,0.137205,0.221708,0.344908],[0.0908,0.120155,0.178763,0.25968,0.436312,0.678395],[0.101514,0.13914,0.216303,0.328495,0.582476,0.953145],[0.101514,0.13914,0.216303,0.328495,0.611126,1.0]],"crit":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0.0,0.0,0.0,0.0,0.0,0.0],[0.0,0.0,0.0,0.0,0.0,0.0]],"carter":{"buff":[{"pct":0,"duration":2.0},{"pct":0,"duration":2.0},{"pct":0,"duration":2.0},{"pct":0,"duration":2.0},{"pct":0,"duration":2.0},{"pct":0,"duration":2.0}],"cd":10.0,"cool":[0.0,0.0,0.0,0.0,0.0,0.0]}}},"levels":[[1703.333333,42.548333,8.51375],[1989.166667,51.336667,10.2675],[2275,60.125,12.03125],[2560.833333,68.913333,13.785],[2846.666667,77.701667,15.54875],[3124.4,86.3,17.2625],[3426.433333,95.478333,19.09625],[3752.766667,105.226667,21.05],[4103.4,115.565,23.11375],[4478.333333,126.473333,25.2975],[4853.266667,137.381667,27.48125],[5264.65,149.16,29.835],[5712.483333,161.808333,32.36875],[6196.766667,175.326667,35.0725],[6717.5,189.705,37.94625],[7238.233333,204.093333,40.82],[7813.646667,219.771667,43.96375],[8443.73,236.76,47.3575],[9128.483333,255.048333,51.01125],[9867.916667,274.636667,54.935],[10580.02,293.575,58.71875],[11370.713333,314.393333,62.8825],[12239.996667,337.071667,67.41625],[13187.88,361.62,72.33],[14214.353333,388.048333,77.61375],[15150.286667,412.316667,82.4675],[16192.8,439.125,87.83125],[17341.883333,468.463333,93.695],[18597.546667,500.341667,100.07875],[19959.78,534.76,106.9625],[21147.233333,565.018333,113.00625],[22472.706667,598.566667,119.72],[23936.19,635.395,127.08375],[25537.683333,675.503333,135.1075],[27277.196667,718.911667,143.79125],[28748.57,755.93,151.195],[30393.443333,797.078333,159.41875],[32211.816667,842.356667,168.4825],[34203.7,891.765,178.35625],[36369.083333,945.303333,189.07],[37691.326667,978.771667,195.76375],[39175.27,1016.09,203.2275],[40812.393333,1057.048333,211.42125],[42594.196667,1101.456667,220.295],[44512.17,1149.105,229.82875],[45892.273333,1183.953333,236.8025],[47449.406667,1223.011667,244.60625],[49173.34,1266.04,253.22],[51053.863333,1312.798333,262.56375],[53080.766667,1363.046667,272.6175],[54463,1397.935,279.59125],[56033.553333,1437.313333,287.475],[57780.396667,1480.891667,296.18875],[59691.52,1528.38,305.6825],[61754.893333,1579.488333,315.90625],[63072.236667,1612.836667,322.58],[64584.17,1650.825,330.17375],[66276.803333,1693.103333,338.6275],[68136.226667,1739.361667,347.88125],[70148.55,1789.26,357.865],[71324.113333,1819.238333,363.85875],[72694.686667,1853.846667,370.7825],[74244.44,1892.735,378.55625],[75957.573333,1935.503333,387.11],[77818.266667,1981.791667,396.36375],[80285.38,2042.52,408.5175],[83050.463333,2110.338333,422.08125],[86113.526667,2185.256667,437.065],[89474.55,2267.265,453.45875],[93133.553333,2356.363333,471.2825],[95898.636667,2424.181667,484.84625],[98998.95,2499.99,500.01],[102434.463333,2583.768333,516.76375],[106205.206667,2675.526667,535.1175],[110311.17,2775.275,555.06125],[113398.063333,2850.763333,570.165],[116860.406667,2935.181667,587.04875],[120698.19,3028.54,605.7225],[124911.423333,3130.838333,626.17625],[129500.096667,3242.076667,648.43],[132934.28,3325.825,665.17375],[136787.313333,3419.553333,683.9175],[141059.206667,3523.241667,704.66125],[145749.96,3636.92,727.395],[150859.563333,3760.558333,752.11875],[154668.256667,3853.226667,770.6525],[158942.61,3956.975,791.40625],[163682.643333,4071.823333,814.38],[168888.336667,4197.751667,839.56375],[174559.7,4334.77,866.9675],[178771.973333,4437.038333,887.42125],[183500.356667,4551.606667,910.335],[188744.86,4678.465,935.70875],[194505.473333,4817.603333,963.5325],[200782.216667,4969.031667,993.81625],[205429.11,5081.66,1016.34],[210646.443333,5207.868333,1041.58375],[216434.226667,5347.656667,1069.5475],[222792.46,5501.025,1100.22125],[229721.133333,5667.973333,1133.605],[234452.446667,5782.611667,1156.53875],[239764.77,5911.08,1182.2325],[245658.083333,6053.378333,1210.68625],[252132.396667,6209.516667,1241.92],[259187.71,6379.485,1275.91375],[263994.283333,6495.913333,1299.1975],[269391.256667,6626.391667,1325.29125],[275378.64,6770.93,1354.195],[281956.423333,6929.528333,1385.91875],[289124.616667,7102.186667,1420.4525],[293997.75,7220.195,1444.05625],[299469.593333,7352.463333,1470.51],[305540.176667,7498.981667,1499.81375],[312209.47,7659.76,1531.9675],[319477.493333,7834.798333,1566.97125],[324408.936667,7954.196667,1590.855],[329946.38,8088.025,1617.61875],[336089.843333,8236.283333,1647.2725],[342839.326667,8398.961667,1679.80625],[350194.81,8576.08,1715.23],[355093.42,8692.71,1738.56],[360604.35,8823.93,1764.8],[366727.61,8969.72,1793.96],[373463.19,9130.09,1826.03],[380811.1,9305.04,1861.02],[385752.81,9422.7,1884.55],[391312.24,9555.07,1911.03],[397489.38,9702.14,1940.44],[404284.23,9863.92,1972.8],[411696.8,10040.41,2008.1],[416674.63,10158.93,2031.8],[422274.68,10292.27,2058.47],[428496.96,10440.42,2088.1],[435341.47,10603.38,2120.69],[442808.21,10781.16,2156.25],[447815.54,10900.38,2180.09],[453448.77,11034.51,2206.92],[459707.93,11183.54,2236.72],[466593,11347.47,2269.51],[474103.99,11526.3,2305.27],[479134.56,11646.08,2329.23],[484793.95,11780.82,2356.18],[491082.17,11930.54,2386.12],[497999.2,12095.23,2419.06],[505545.06,12274.9,2454.99],[510592.98,12395.09,2479.03],[516271.89,12530.3,2506.07],[522581.79,12680.53,2536.12],[529522.67,12845.79,2569.17],[537094.55,13026.08,2605.23]],"stars":[[0,0,0],[19889.95,521.24,104.25],[44252.4,1148.93,229.8],[73087.3,1883.12,376.65],[110867.15,2830.31,566.1],[157592,3990.45,798.15]],"gear":{"3":{"maxLevel":15,"maxStage":0,"steps":[{"hp":4266.666667,"attack":106.666667,"defense":22,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":4480,"attack":112.0,"defense":22.4,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":4693.333333,"attack":117.333333,"defense":23.466667,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":4906.666667,"attack":122.666667,"defense":24.533333,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":5120,"attack":128.0,"defense":25.6,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":5333.333333,"attack":133.333333,"defense":26.666667,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":5546.666667,"attack":138.666667,"defense":27.733333,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":5760,"attack":144.0,"defense":28.8,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":5973.333333,"attack":149.333333,"defense":29.866667,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":6186.666667,"attack":154.666667,"defense":30.933333,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":6400,"attack":160,"defense":32,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":6613.333333,"attack":165.333333,"defense":33.066667,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":6826.666667,"attack":170.666667,"defense":34.133333,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":7040,"attack":176.0,"defense":35.2,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":7253.333333,"attack":181.333333,"defense":36.266667,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0},{"hp":7466.666667,"attack":186.666667,"defense":37.333333,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0,"crit":0,"resist":0}]},"4":{"maxLevel":30,"maxStage":0,"steps":[{"hp":12800,"attack":322,"defense":65,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.056,"crit":0,"resist":0},{"hp":13440,"attack":336.0,"defense":67.2,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0586,"crit":0,"resist":0},{"hp":14080,"attack":352.0,"defense":70.4,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0608,"crit":0,"resist":0},{"hp":14720,"attack":368.0,"defense":73.6,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0636,"crit":0,"resist":0},{"hp":15360,"attack":384.0,"defense":76.8,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0662,"crit":0,"resist":0},{"hp":16000,"attack":400,"defense":80,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0692,"crit":0,"resist":0},{"hp":16640,"attack":416.0,"defense":83.2,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0714,"crit":0,"resist":0},{"hp":17280,"attack":432.0,"defense":86.4,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0738,"crit":0,"resist":0},{"hp":17920,"attack":448.0,"defense":89.6,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0758,"crit":0,"resist":0},{"hp":18560,"attack":464.0,"defense":92.8,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.0784,"crit":0,"resist":0},{"hp":19200,"attack":480,"defense":96.0,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1304,"crit":0,"resist":0},{"hp":19840,"attack":496.0,"defense":99.2,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1326,"crit":0,"resist":0},{"hp":20480,"attack":512.0,"defense":102.4,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1352,"crit":0,"resist":0},{"hp":21120,"attack":528.0,"defense":105.6,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1382,"crit":0,"resist":0},{"hp":21760,"attack":544.0,"defense":108.8,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1402,"crit":0,"resist":0},{"hp":22400,"attack":560,"defense":112.0,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1424,"crit":0,"resist":0},{"hp":23040,"attack":576.0,"defense":115.2,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.145,"crit":0,"resist":0},{"hp":23680,"attack":592.0,"defense":118.4,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1476,"crit":0,"resist":0},{"hp":24320,"attack":608.0,"defense":121.6,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1506,"crit":0,"resist":0},{"hp":24960,"attack":624.0,"defense":124.8,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.1534,"crit":0,"resist":0},{"hp":25600,"attack":640,"defense":128.0,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.206,"crit":0,"resist":0},{"hp":26240,"attack":656.0,"defense":131.2,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2084,"crit":0,"resist":0},{"hp":26880,"attack":672.0,"defense":134.4,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2108,"crit":0,"resist":0},{"hp":27520,"attack":688.0,"defense":137.6,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2138,"crit":0,"resist":0},{"hp":28160,"attack":704.0,"defense":140.8,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2158,"crit":0,"resist":0},{"hp":28800,"attack":720,"defense":144.0,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2178,"crit":0,"resist":0},{"hp":29440,"attack":736.0,"defense":147.2,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2198,"crit":0,"resist":0},{"hp":30080,"attack":752.0,"defense":150.4,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2224,"crit":0,"resist":0},{"hp":30720,"attack":768.0,"defense":153.6,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2254,"crit":0,"resist":0},{"hp":31360,"attack":784.0,"defense":156.8,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2278,"crit":0,"resist":0},{"hp":32000,"attack":800,"defense":160,"hpPct":0,"attackPct":0,"defensePct":0,"monsterPct":0.2802,"crit":0,"resist":0}]},"5":{"maxLevel":40,"maxStage":25,"steps":[{"hp":64000,"attack":1600,"defense":320,"hpPct":0.056,"attackPct":0.056,"defensePct":0.056,"monsterPct":0,"crit":0.051,"resist":0.025},{"hp":67200,"attack":1680,"defense":336.0,"hpPct":0.0582,"attackPct":0.0582,"defensePct":0.0582,"monsterPct":0,"crit":0.0525,"resist":0.021},{"hp":70400,"attack":1760,"defense":352.0,"hpPct":0.061,"attackPct":0.061,"defensePct":0.061,"monsterPct":0,"crit":0.055,"resist":0.022},{"hp":73600,"attack":1840,"defense":368.0,"hpPct":0.0636,"attackPct":0.0636,"defensePct":0.0636,"monsterPct":0,"crit":0.0575,"resist":0.023},{"hp":76800,"attack":1920,"defense":384.0,"hpPct":0.066,"attackPct":0.066,"defensePct":0.066,"monsterPct":0,"crit":0.06,"resist":0.024},{"hp":80000,"attack":2000,"defense":400,"hpPct":0.0688,"attackPct":0.0688,"defensePct":0.0688,"monsterPct":0,"crit":0.0625,"resist":0.025},{"hp":83200,"attack":2080,"defense":416.0,"hpPct":0.0714,"attackPct":0.0714,"defensePct":0.0714,"monsterPct":0,"crit":0.065,"resist":0.026},{"hp":86400,"attack":2160,"defense":432.0,"hpPct":0.0736,"attackPct":0.0736,"defensePct":0.0736,"monsterPct":0,"crit":0.0675,"resist":0.027},{"hp":89600,"attack":2240,"defense":448.0,"hpPct":0.0766,"attackPct":0.0766,"defensePct":0.0766,"monsterPct":0,"crit":0.07,"resist":0.028},{"hp":92800,"attack":2320,"defense":464.0,"hpPct":0.079,"attackPct":0.079,"defensePct":0.079,"monsterPct":0,"crit":0.0725,"resist":0.029},{"hp":122000,"attack":2960,"defense":600,"hpPct":0.0816,"attackPct":0.0816,"defensePct":0.0816,"monsterPct":0,"crit":0.075,"resist":0.03},{"hp":125200,"attack":3040,"defense":616.0,"hpPct":0.0838,"attackPct":0.0838,"defensePct":0.0838,"monsterPct":0,"crit":0.0775,"resist":0.031},{"hp":128400,"attack":3120,"defense":632.0,"hpPct":0.086,"attackPct":0.086,"defensePct":0.086,"monsterPct":0,"crit":0.08,"resist":0.032},{"hp":131600,"attack":3200,"defense":648.0,"hpPct":0.0882,"attackPct":0.0882,"defensePct":0.0882,"monsterPct":0,"crit":0.0825,"resist":0.033},{"hp":134800,"attack":3280,"defense":664.0,"hpPct":0.0908,"attackPct":0.0908,"defensePct":0.0908,"monsterPct":0,"crit":0.085,"resist":0.034},{"hp":138000,"attack":3360,"defense":680,"hpPct":0.0934,"attackPct":0.0934,"defensePct":0.0934,"monsterPct":0,"crit":0.0875,"resist":0.035},{"hp":141200,"attack":3440,"defense":696.0,"hpPct":0.0954,"attackPct":0.0954,"defensePct":0.0954,"monsterPct":0,"crit":0.09,"resist":0.036},{"hp":144400,"attack":3520,"defense":712.0,"hpPct":0.0976,"attackPct":0.0976,"defensePct":0.0976,"monsterPct":0,"crit":0.0925,"resist":0.037},{"hp":147600,"attack":3600,"defense":728.0,"hpPct":0.0998,"attackPct":0.0998,"defensePct":0.0998,"monsterPct":0,"crit":0.095,"resist":0.038},{"hp":150800,"attack":3680,"defense":744.0,"hpPct":0.1026,"attackPct":0.1026,"defensePct":0.1026,"monsterPct":0,"crit":0.0975,"resist":0.039},{"hp":154000,"attack":3760,"defense":760,"hpPct":0.1046,"attackPct":0.1046,"defensePct":0.1046,"monsterPct":0,"crit":0.13,"resist":0.065},{"hp":157200,"attack":3840,"defense":776.0,"hpPct":0.1074,"attackPct":0.1074,"defensePct":0.1074,"monsterPct":0,"crit":0.1325,"resist":0.066},{"hp":160400,"attack":3920,"defense":792.0,"hpPct":0.1098,"attackPct":0.1098,"defensePct":0.1098,"monsterPct":0,"crit":0.135,"resist":0.067},{"hp":163600,"attack":4000,"defense":808.0,"hpPct":0.1122,"attackPct":0.1122,"defensePct":0.1122,"monsterPct":0,"crit":0.1375,"resist":0.068},{"hp":166800,"attack":4080,"defense":824.0,"hpPct":0.1152,"attackPct":0.1152,"defensePct":0.1152,"monsterPct":0,"crit":0.14,"resist":0.069},{"hp":170000,"attack":4160,"defense":840,"hpPct":0.1178,"attackPct":0.1178,"defensePct":0.1178,"monsterPct":0,"crit":0.1425,"resist":0.07},{"hp":173200,"attack":4240,"defense":856.0,"hpPct":0.1202,"attackPct":0.1202,"defensePct":0.1202,"monsterPct":0,"crit":0.145,"resist":0.071},{"hp":176400,"attack":4320,"defense":872.0,"hpPct":0.1228,"attackPct":0.1228,"defensePct":0.1228,"monsterPct":0,"crit":0.1475,"resist":0.072},{"hp":179600,"attack":4400,"defense":888.0,"hpPct":0.1248,"attackPct":0.1248,"defensePct":0.1248,"monsterPct":0,"crit":0.15,"resist":0.073},{"hp":182800,"attack":4480,"defense":904.0,"hpPct":0.127,"attackPct":0.127,"defensePct":0.127,"monsterPct":0,"crit":0.1525,"resist":0.074},{"hp":212000,"attack":5120,"defense":1040,"hpPct":0.1294,"attackPct":0.1294,"defensePct":0.1294,"monsterPct":0,"crit":0.155,"resist":0.075},{"hp":215200,"attack":5200,"defense":1056.0,"hpPct":0.132,"attackPct":0.132,"defensePct":0.132,"monsterPct":0,"crit":0.1575,"resist":0.076},{"hp":218400,"attack":5280,"defense":1072.0,"hpPct":0.1344,"attackPct":0.1344,"defensePct":0.1344,"monsterPct":0,"crit":0.16,"resist":0.077},{"hp":221600,"attack":5360,"defense":1088.0,"hpPct":0.1372,"attackPct":0.1372,"defensePct":0.1372,"monsterPct":0,"crit":0.1625,"resist":0.078},{"hp":224800,"attack":5440,"defense":1104.0,"hpPct":0.1398,"attackPct":0.1398,"defensePct":0.1398,"monsterPct":0,"crit":0.165,"resist":0.079},{"hp":228000,"attack":5520,"defense":1120,"hpPct":0.1428,"attackPct":0.1428,"defensePct":0.1428,"monsterPct":0,"crit":0.1675,"resist":0.08},{"hp":231200,"attack":5600,"defense":1136.0,"hpPct":0.1456,"attackPct":0.1456,"defensePct":0.1456,"monsterPct":0,"crit":0.17,"resist":0.081},{"hp":234400,"attack":5680,"defense":1152.0,"hpPct":0.1482,"attackPct":0.1482,"defensePct":0.1482,"monsterPct":0,"crit":0.1725,"resist":0.082},{"hp":237600,"attack":5760,"defense":1168.0,"hpPct":0.1502,"attackPct":0.1502,"defensePct":0.1502,"monsterPct":0,"crit":0.175,"resist":0.083},{"hp":240800,"attack":5840,"defense":1184.0,"hpPct":0.153,"attackPct":0.153,"defensePct":0.153,"monsterPct":0,"crit":0.1775,"resist":0.084},{"hp":244000,"attack":5920,"defense":1200,"hpPct":0.156,"attackPct":0.156,"defensePct":0.156,"monsterPct":0,"crit":0.21,"resist":0.11},{"hp":256798.72,"attack":6239.968,"defense":1263.9936,"hpPct":0.1612,"attackPct":0.1612,"defensePct":0.1612,"monsterPct":0,"crit":0.2152,"resist":0.112},{"hp":269597.44,"attack":6559.936,"defense":1327.9872,"hpPct":0.1664,"attackPct":0.1664,"defensePct":0.1664,"monsterPct":0,"crit":0.2204,"resist":0.114},{"hp":282396.16,"attack":6879.904,"defense":1391.9808,"hpPct":0.1712,"attackPct":0.1712,"defensePct":0.1712,"monsterPct":0,"crit":0.2252,"resist":0.116},{"hp":295194.88,"attack":7199.872,"defense":1455.9744,"hpPct":0.178,"attackPct":0.178,"defensePct":0.178,"monsterPct":0,"crit":0.232,"resist":0.118},{"hp":366424.0,"attack":8745.6,"defense":1767.12,"hpPct":0.186,"attackPct":0.186,"defensePct":0.186,"monsterPct":0,"crit":0.24,"resist":0.122},{"hp":382052.8,"attack":9136.32,"defense":1845.264,"hpPct":0.1912,"attackPct":0.1912,"defensePct":0.1912,"monsterPct":0,"crit":0.2452,"resist":0.124},{"hp":397392.448,"attack":9519.8112,"defense":1921.96224,"hpPct":0.196,"attackPct":0.196,"defensePct":0.196,"monsterPct":0,"crit":0.25,"resist":0.126},{"hp":412772.8,"attack":9904.32,"defense":1998.864,"hpPct":0.2014,"attackPct":0.2014,"defensePct":0.2014,"monsterPct":0,"crit":0.2554,"resist":0.128},{"hp":428132.8,"attack":10288.32,"defense":2075.664,"hpPct":0.2062,"attackPct":0.2062,"defensePct":0.2062,"monsterPct":0,"crit":0.2602,"resist":0.13},{"hp":453707.2,"attack":10927.68,"defense":2203.536,"hpPct":0.216,"attackPct":0.216,"defensePct":0.216,"monsterPct":0,"crit":0.296,"resist":0.159},{"hp":472024.0,"attack":11385.6,"defense":2295.12,"hpPct":0.2214,"attackPct":0.2214,"defensePct":0.2214,"monsterPct":0,"crit":0.3014,"resist":0.161},{"hp":490187.2,"attack":11839.68,"defense":2385.936,"hpPct":0.226,"attackPct":0.226,"defensePct":0.226,"monsterPct":0,"crit":0.306,"resist":0.163},{"hp":508120,"attack":12288.0,"defense":2475.6,"hpPct":0.2312,"attackPct":0.2312,"defensePct":0.2312,"monsterPct":0,"crit":0.3112,"resist":0.165},{"hp":526552.0,"attack":12748.8,"defense":2567.76,"hpPct":0.236,"attackPct":0.236,"defensePct":0.236,"monsterPct":0,"crit":0.316,"resist":0.167},{"hp":613532.8,"attack":14688.32,"defense":2957.664,"hpPct":0.246,"attackPct":0.246,"defensePct":0.246,"monsterPct":0,"crit":0.326,"resist":0.171},{"hp":634652.8,"attack":15216.32,"defense":3063.264,"hpPct":0.251,"attackPct":0.251,"defensePct":0.251,"monsterPct":0,"crit":0.331,"resist":0.173},{"hp":655120,"attack":15728.0,"defense":3165.6,"hpPct":0.256,"attackPct":0.256,"defensePct":0.256,"monsterPct":0,"crit":0.336,"resist":0.175},{"hp":676240,"attack":16256.0,"defense":3271.2,"hpPct":0.261,"attackPct":0.261,"defensePct":0.261,"monsterPct":0,"crit":0.341,"resist":0.177},{"hp":697360,"attack":16784.0,"defense":3376.8,"hpPct":0.266,"attackPct":0.266,"defensePct":0.266,"monsterPct":0,"crit":0.346,"resist":0.179},{"hp":737680,"attack":17792.0,"defense":3578.4,"hpPct":0.276,"attackPct":0.276,"defensePct":0.276,"monsterPct":0,"crit":0.382,"resist":0.208},{"hp":760720,"attack":18368.0,"defense":3693.6,"hpPct":0.281,"attackPct":0.281,"defensePct":0.281,"monsterPct":0,"crit":0.387,"resist":0.21},{"hp":783760,"attack":18944.0,"defense":3808.8,"hpPct":0.286,"attackPct":0.286,"defensePct":0.286,"monsterPct":0,"crit":0.392,"resist":0.212},{"hp":806800,"attack":19520,"defense":3924.0,"hpPct":0.291,"attackPct":0.291,"defensePct":0.291,"monsterPct":0,"crit":0.397,"resist":0.214},{"hp":829840,"attack":20096.0,"defense":4039.2,"hpPct":0.296,"attackPct":0.296,"defensePct":0.296,"monsterPct":0,"crit":0.402,"resist":0.216},{"hp":879760,"attack":21344.0,"defense":4288.8,"hpPct":0.306,"attackPct":0.306,"defensePct":0.306,"monsterPct":0,"crit":0.412,"resist":0.22}]}}};
 const H=[
  {id:"arnold",ru:"Арнольд",f:"w",role:"Танк",pos:"front",dmg:"Физ.",dps:40752},
  {id:"monroe",ru:"Монро",f:"w",role:"ДПС",pos:"back",dmg:"Физ.",dps:389096},
  {id:"dirk",ru:"Дирк",f:"w",role:"Танк",pos:"front",dmg:"Физ.",dps:36176},
- {id:"carter",ru:"Картер",f:"w",role:"Поддержка",pos:"back",dmg:"Радиац.",dps:null},
+ {id:"carter",ru:"Картер",f:"w",role:"Поддержка",pos:"back",dmg:"Радиац.",dps:62306},
  {id:"bekka",ru:"Бекка",f:"t",role:"Танк",pos:"front",dmg:"Физ.",dps:51685},
  {id:"leah",ru:"Лия",f:"t",role:"ДПС",pos:"back",dmg:"Радиац.",dps:218918},
  {id:"vince",ru:"Винс",f:"t",role:"Танк",pos:"front",dmg:"Физ.",dps:43340},
@@ -193,18 +220,11 @@ const H=[
  {id:"katya",ru:"Катя",f:"w",role:"ДПС",pos:"back",dmg:"Физ.",dps:205327},
  {id:"virgilio",ru:"Вирджилио",f:"t",role:"Танк",pos:"front",dmg:"Физ.",dps:11534},
  {id:"yana",ru:"Яна",f:"a",role:"ДПС",pos:"back",dmg:"Радиац.",dps:221933},
- {id:"victor",ru:"Витторе",f:"a",role:"ДПС",pos:"back",dmg:"Физ.",dps:168504},
+ {id:"victor",ru:"Витторе",f:"a",role:"ДПС",pos:"back",dmg:"Физ.",dps:168504,pveDps:234249},
  {id:"silas",ru:"Сайлас",f:"a",role:"ДПС",pos:"back",dmg:"Радиац.",dps:234259}
 ];
-// Фракции, по которым сайт и вики расходятся
 const ALT={katya:"t",silas:"t",vince:"a"};
 const FN={w:"Warrior",t:"Tactical",a:"Assault"};
-const CARTER_AUTO=62306, CARTER_K=0.176;
-const byId=id=>H.find(h=>h.id===id);
-const fmt=n=>Math.round(n).toLocaleString("ru-RU").replace(/ /g," ");
-const srcSel=document.getElementById("src");
-const fac=h=>srcSel.value==="wiki"?(ALT[h.id]||h.f):h.f;
-
 const PRE=[
  {n:"Ваш текущий",s:["arnold","dirk","monroe","lucian","carter"]},
  {n:"Hero Pass Katya",s:["arnold","dirk","monroe","katya","carter"]},
@@ -215,84 +235,204 @@ const PRE=[
  {n:"Tactical Elite",s:["vince","bekka","monroe","leah","carter"]},
  {n:"Assault Core",s:["arnold","vince","yana","victor","silas"]}
 ];
-
 const SL=[["f1","Фронт 1"],["f2","Фронт 2"],["b1","Тыл 1"],["b2","Тыл 2"],["b3","Тыл 3"]];
-const slots=document.getElementById("slots");
-SL.forEach(([id,lb])=>{
-  const d=document.createElement("div");d.className="slot";
-  const l=document.createElement("label");l.setAttribute("for",id);l.textContent=lb;
-  const s=document.createElement("select");s.id=id;
-  H.forEach(h=>{const o=document.createElement("option");o.value=h.id;o.textContent=h.ru+" · "+h.role;s.appendChild(o);});
-  s.addEventListener("change",()=>calc());
-  d.append(l,s);slots.appendChild(d);
+const STORAGE_KEY="zroute-squad-v2";
+const QUALITY_NAMES={0:"Нет",3:"Good",4:"SSR",5:"UR"};
+const byId=id=>H.find(h=>h.id===id);
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,Number(n)||0));
+const fmt=n=>Math.round(Number(n)||0).toLocaleString("ru-RU").replace(/ /g," ");
+const fmtPct=n=>(Math.round(n*1000)/10).toLocaleString("ru-RU")+"%";
+const defaultConfig=()=>({level:150,stars:5,quality:5,gearStep:GAME.gear["5"].steps.length-1,owned:false});
+const freshState=()=>({version:2,slots:PRE[0].s.slice(),source:"site",mode:"pvp",heroes:Object.fromEntries(H.map(h=>[h.id,defaultConfig()]))});
+let state=freshState();
+try{
+ const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null");
+ if(saved&&saved.version===2){
+  state.slots=Array.isArray(saved.slots)&&saved.slots.length===5?saved.slots.map((id,i)=>byId(id)?id:PRE[0].s[i]):state.slots;
+  state.source=["site","wiki"].includes(saved.source)?saved.source:"site";
+  state.mode=["pvp","pve"].includes(saved.mode)?saved.mode:"pvp";
+  H.forEach(h=>{
+   const raw=saved.heroes?.[h.id]||{},def=defaultConfig(),quality=[0,3,4,5].includes(Number(raw.quality))?Number(raw.quality):5;
+   const max=quality?GAME.gear[String(quality)].steps.length-1:0;
+   state.heroes[h.id]={level:clamp(raw.level||150,1,150),stars:clamp(raw.stars??5,0,5),quality,gearStep:quality?clamp(raw.gearStep??max,0,max):0,owned:raw.owned===true};
+  });
+ }
+}catch(e){}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+const fac=h=>state.source==="wiki"?(ALT[h.id]||h.f):h.f;
+const gearMax=quality=>quality?GAME.gear[String(quality)].steps.length-1:0;
+function gearLabel(c,short=false){
+ if(!c.quality)return"Без снаряжения";
+ const g=GAME.gear[String(c.quality)],step=Math.round(c.gearStep);
+ if(step===g.steps.length-1)return QUALITY_NAMES[c.quality]+(short?" макс.":" · максимум");
+ const stage=Math.max(0,step-g.maxLevel),level=Math.min(step,g.maxLevel);
+ return QUALITY_NAMES[c.quality]+" "+level+(stage?" + "+stage+" ступ.":"");
+}
+function configSummary(c){return `${c.level} ур. · ${c.stars}★ · ${gearLabel(c,true)}`;}
+function fieldHtml(h,field,label,context){
+ const c=state.heroes[h.id],common=`data-hero="${h.id}" data-field="${field}"`;
+ if(field==="level")return `<label class="field"><span>${label}</span><input type="number" min="1" max="150" step="1" value="${c.level}" ${common} data-context="${context}"></label>`;
+ if(field==="stars")return `<label class="field"><span>${label}</span><select ${common} data-context="${context}">${[0,1,2,3,4,5].map(v=>`<option value="${v}" ${v===c.stars?"selected":""}>${v}★</option>`).join("")}</select></label>`;
+ if(field==="quality")return `<label class="field"><span>${label}</span><select ${common} data-context="${context}">${[0,3,4,5].map(v=>`<option value="${v}" ${v===c.quality?"selected":""}>${QUALITY_NAMES[v]}</option>`).join("")}</select></label>`;
+ return `<label class="field"><span>${label}</span><input type="number" min="0" max="${gearMax(c.quality)}" step="1" value="${c.gearStep}" ${common} data-context="${context}" ${c.quality?"":"disabled"}></label>`;
+}
+const slotsEl=document.getElementById("slots");
+SL.forEach(([id,label])=>{
+ const d=document.createElement("div");d.className="slot";
+ d.innerHTML=`<label for="${id}">${label}</label><select id="${id}" data-slot="${id}">${H.map(h=>`<option value="${h.id}">${h.ru} · ${h.role}</option>`).join("")}</select><details class="setup" id="setup-${id}"><summary></summary><div class="mini-grid" id="config-${id}"></div><div class="gear-step-note" id="gear-note-${id}"></div></details>`;
+ slotsEl.appendChild(d);
 });
-
+const rosterEl=document.getElementById("rosterGrid");
+H.forEach(h=>{
+ const row=document.createElement("div");row.className="roster-row";row.id=`roster-${h.id}`;
+ row.innerHTML=`<label class="own" title="Герой есть у игрока"><input type="checkbox" data-hero="${h.id}" data-field="owned" aria-label="${h.ru} есть"></label><div class="roster-name">${h.ru}<small>${h.role} · ${h.pos==="front"?"Фронт":"Тыл"}</small></div>${fieldHtml(h,"level","Уровень","roster")}${fieldHtml(h,"stars","Звёзды","roster")}<div class="gear">${fieldHtml(h,"quality","Качество","roster")}</div><div class="gear-step">${fieldHtml(h,"gearStep","Ур./ступ.","roster")}</div><div class="gear-note" id="roster-gear-${h.id}"></div>`;
+ rosterEl.appendChild(row);
+});
 const pw=document.getElementById("presets");
 let activePreset=0;
-PRE.forEach((p,i)=>{
-  const b=document.createElement("button");b.className="p";b.type="button";b.textContent=p.n;
-  b.addEventListener("click",()=>{SL.forEach(([id],k)=>document.getElementById(id).value=p.s[k]);calc(i);});
-  pw.appendChild(b);
+PRE.forEach((p,i)=>{const b=document.createElement("button");b.className="p";b.type="button";b.textContent=p.n;b.addEventListener("click",()=>{state.slots=p.s.slice();activePreset=i;document.getElementById("recommendation").textContent="";syncSlots();save();calc(i);});pw.appendChild(b);});
+function syncSlots(){
+ SL.forEach(([id],i)=>{
+  document.getElementById(id).value=state.slots[i];
+  const h=byId(state.slots[i]);
+  document.querySelector(`#setup-${id} summary`).textContent=configSummary(state.heroes[h.id]);
+  document.getElementById(`config-${id}`).innerHTML=fieldHtml(h,"level","Уровень","slot")+fieldHtml(h,"stars","Звёзды","slot")+fieldHtml(h,"quality","Качество","slot")+fieldHtml(h,"gearStep","Ур./ступ.","slot");
+  document.getElementById(`gear-note-${id}`).textContent=gearLabel(state.heroes[h.id]);
+ });
+ document.getElementById("src").value=state.source;
+ document.querySelectorAll("[data-mode]").forEach(b=>{const on=b.dataset.mode===state.mode;b.classList.toggle("on",on);b.setAttribute("aria-pressed",String(on));});
+ H.forEach(h=>document.getElementById(`roster-${h.id}`).classList.toggle("selected",state.slots.includes(h.id)));
+}
+function syncHero(h){
+ const c=state.heroes[h.id];
+ document.querySelectorAll(`[data-hero="${h.id}"][data-field]`).forEach(el=>{
+  const field=el.dataset.field;
+  if(el.type==="checkbox")el.checked=c.owned;else el.value=c[field];
+  if(field==="gearStep"){el.max=gearMax(c.quality);el.disabled=!c.quality;}
+ });
+ document.getElementById(`roster-gear-${h.id}`).textContent=gearLabel(c);
+ SL.forEach(([id],i)=>{if(state.slots[i]===h.id){document.querySelector(`#setup-${id} summary`).textContent=configSummary(c);document.getElementById(`gear-note-${id}`).textContent=gearLabel(c);}});
+ const count=H.filter(x=>state.heroes[x.id].owned).length;
+ document.getElementById("ownedCount").textContent=`${count} из ${H.length}`;
+ document.getElementById("ownedLink").textContent=`Отмечено: ${count}`;
+}
+function syncAll(){syncSlots();H.forEach(syncHero);}
+document.addEventListener("change",e=>{
+ const el=e.target;
+ if(el.dataset.slot){state.slots[SL.findIndex(([id])=>id===el.dataset.slot)]=el.value;activePreset=null;document.getElementById("recommendation").textContent="";syncSlots();save();calc();return;}
+ if(!el.dataset.hero)return;
+ const h=byId(el.dataset.hero),c=state.heroes[h.id],field=el.dataset.field;
+ if(field==="owned")c.owned=el.checked;
+ else if(field==="level")c.level=Math.round(clamp(el.value,1,150));
+ else if(field==="stars")c.stars=Math.round(clamp(el.value,0,5));
+ else if(field==="quality"){c.quality=Number(el.value);c.gearStep=c.quality?Math.min(c.gearStep,gearMax(c.quality)):0;if(c.quality&&el.dataset.context==="slot"&&c.gearStep===0)c.gearStep=0;}
+ else if(field==="gearStep")c.gearStep=Math.round(clamp(el.value,0,gearMax(c.quality)));
+ if(field!=="owned"){activePreset=null;document.getElementById("recommendation").textContent="";}
+ syncHero(h);syncSlots();save();calc();
 });
-srcSel.addEventListener("change",()=>calc(activePreset));
-
+document.getElementById("src").addEventListener("change",e=>{state.source=e.target.value;save();calc(activePreset);});
+document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{state.mode=b.dataset.mode;document.getElementById("recommendation").textContent="";syncSlots();save();calc(activePreset);}));
+document.getElementById("allOwned").addEventListener("click",()=>{H.forEach(h=>state.heroes[h.id].owned=true);syncAll();save();});
+document.getElementById("noOwned").addEventListener("click",()=>{H.forEach(h=>state.heroes[h.id].owned=false);document.getElementById("recommendation").textContent="";syncAll();save();});
+document.getElementById("resetData").addEventListener("click",()=>{if(!confirm("Сбросить уровни, звёзды, снаряжение и отметки всех героев?"))return;const keep={slots:state.slots.slice(),source:state.source,mode:state.mode};state=freshState();Object.assign(state,keep);activePreset=null;document.getElementById("recommendation").textContent="";syncAll();save();calc();});
 function multiplier(c){
-  const m=Math.max(...Object.values(c));
-  if(m===5)return[1.20,"+20%","пять одной фракции"];
-  if(m===4)return[1.15,"+15%","четыре одной фракции"];
-  if(m===3){const rest=Object.values(c).filter(v=>v!==m);
-    return rest.includes(2)?[1.10,"+10%","схема 3 + 2"]:[1.05,"+5%","три одной фракции"];}
-  return[1.00,"0%","бонуса нет"];
+ const m=Math.max(...Object.values(c));
+ if(m===5)return[1.20,"+20%","пять одной фракции"];
+ if(m===4)return[1.15,"+15%","четыре одной фракции"];
+ if(m===3){const rest=Object.values(c).filter(v=>v!==m);return rest.includes(2)?[1.10,"+10%","схема 3 + 2"]:[1.05,"+5%","три одной фракции"];}
+ return[1,"0%","бонуса нет"];
 }
-
+function baseStats(h,c){
+ const level=GAME.levels[c.level-1],star=GAME.stars[c.stars],base=GAME.heroes[h.id].base;
+ return{hp:(level[0]+star[0])*base.hp/10000,attack:(level[1]+star[1])*base.attack/10000,defense:(level[2]+star[2])*base.defense/10000};
+}
+function heroEstimate(h,c,mult=1,mode=state.mode){
+ const data=GAME.heroes[h.id],base=baseStats(h,c),gear=c.quality?GAME.gear[String(c.quality)].steps[c.gearStep]:{hp:0,attack:0,defense:0,hpPct:0,attackPct:0,defensePct:0,crit:0,monsterPct:0};
+ const specialty=c.level>=31&&c.stars>=4?1.2:1;
+ const stats={hp:(base.hp+gear.hp)*(1+gear.hpPct)*specialty*mult,attack:(base.attack+gear.attack)*(1+gear.attackPct)*specialty*mult,defense:(base.defense+gear.defense)*(1+gear.defensePct)*specialty*mult};
+ const refBase=baseStats(h,defaultConfig()),refAttack=refBase.attack*1.2;
+ const category=c.level<5?0:c.level<21?1:c.level<31?2:3;
+ const ratio=data.dpsRatio[category][c.stars],innateCrit=category>=2?data.crit[category][c.stars]:0;
+ const critFactor=(1+innateCrit+gear.crit)/(1+innateCrit);
+ const maxDps=mode==="pve"&&h.pveDps?h.pveDps:h.dps;
+ const dps=maxDps*(stats.attack/mult/refAttack)*ratio*critFactor*(mode==="pve"?1+gear.monsterPct:1);
+ return{stats,dps,gear,ratio,critFactor};
+}
+function carterBuff(base,c){
+ if(c.level<5)return{value:0,pct:0,duration:0,cd:0};
+ const data=GAME.heroes.carter.carter,raw=data.buff[c.stars],max=data.buff[5];
+ const passive=c.level>=21?data.cool[c.stars]:0,specialty=c.level>=31&&c.stars>=4?1.1:1;
+ const cd=9.09*(1+data.cool[5])*1.1/((1+passive)*specialty);
+ const pct=.165*raw.pct/max.pct,duration=6*raw.duration/max.duration;
+ return{value:base*pct*Math.min(1,duration/cd),pct,duration,cd};
+}
+function evaluate(ids){
+ const sq=ids.map(byId),cnt={w:0,t:0,a:0};sq.forEach(h=>cnt[fac(h)]++);
+ const[mult,pct,fdesc]=multiplier(cnt),members=sq.map(h=>({h,c:state.heroes[h.id],...heroEstimate(h,state.heroes[h.id],mult)}));
+ const base=members.reduce((sum,m)=>sum+m.dps,0),carter=members.find(m=>m.h.id==="carter");
+ const buff=carter?carterBuff(base,carter.c):{value:0,pct:0,duration:0,cd:0};
+ return{sq,cnt,mult,pct,fdesc,members,base,buff,total:(base+buff.value)*mult,noFaction:base+buff.value};
+}
+function invalidSquad(ids){
+ document.getElementById("out").innerHTML=`<div class="stat"><div class="k">Состав</div><div class="v" style="color:var(--bad)">Недействителен</div><div class="n">Выберите пять разных героев.</div></div>`;
+ document.getElementById("bars").innerHTML="";document.getElementById("heroStats").innerHTML="";
+ document.getElementById("flags").innerHTML=`<div class="flag er">Один герой выбран дважды — расчёт остановлен.</div>`;
+ [...pw.children].forEach((b,i)=>b.classList.toggle("on",i===activePreset));
+}
 function calc(active){
-  if(active!==undefined)activePreset=active;
-  const ids=SL.map(([id])=>document.getElementById(id).value);
-  const sq=ids.map(byId);
-  const cnt={w:0,t:0,a:0};sq.forEach(h=>cnt[fac(h)]++);
-  const [mult,pct,fdesc]=multiplier(cnt);
-
-  const others=sq.filter(h=>h.id!=="carter").reduce((s,h)=>s+h.dps,0);
-  const hasC=sq.some(h=>h.id==="carter");
-  const base=hasC?others+CARTER_AUTO:others;
-  const buff=hasC?base*CARTER_K:0;
-  const total=(base+buff)*mult;
-
-  document.getElementById("out").innerHTML=`
-    <div class="stat"><div class="k">Бонус фракции</div><div class="v">${pct}</div><div class="n">${fdesc}</div></div>
-    <div class="stat"><div class="k">Состав</div><div class="v" style="font-size:15px;font-family:var(--ff-b)">${cnt.w}W · ${cnt.t}T · ${cnt.a}A</div><div class="n">Warrior · Tactical · Assault</div></div>
-    <div class="stat"><div class="k">Урон отряда</div><div class="v">${fmt(total)}</div><div class="n">ед/сек при макс. прокачке</div></div>
-    <div class="stat"><div class="k">Без бонуса</div><div class="v">${fmt(base+buff)}</div><div class="n">бонус даёт +${fmt(total-base-buff)}</div></div>`;
-
-  const parts=sq.map(h=>({nm:h.ru,f:fac(h),v:h.id==="carter"?CARTER_AUTO+buff:h.dps}));
-  const mx=Math.max(...parts.map(p=>p.v))||1;
-  document.getElementById("bars").innerHTML=parts.sort((a,b)=>b.v-a.v).map(p=>{
-    const col=p.f==="w"?"var(--war)":p.f==="t"?"var(--tac)":"var(--ass)";
-    return `<div class="bar"><div class="nm">${p.nm}</div><div class="tr"><div class="fl" style="width:${(p.v/mx*100).toFixed(1)}%;background:${col}"></div></div><div class="vv">${fmt(p.v*mult)}</div></div>`;
-  }).join("");
-
-  const fl=[];
-  const fw=sq.slice(0,2).filter(h=>h.pos!=="front").map(h=>h.ru);
-  const bw=sq.slice(2).filter(h=>h.pos!=="back").map(h=>h.ru);
-  if(fw.length)fl.push(["er",`${fw.join(" и ")} — тыловой герой на фронте. Он не держит удар.`]);
-  if(bw.length)fl.push(["er",`${bw.join(" и ")} — танк в тылу. Его защита пропадает зря.`]);
-  if(new Set(ids).size<5)fl.push(["er","Один герой выбран дважды — состав неполный."]);
-  const tanks=sq.filter(h=>h.role==="Танк").length;
-  if(tanks===0)fl.push(["wa","В отряде нет танков. Стеклянный состав разваливается под бурстом."]);
-  if(mult===1.20)fl.push(["ok","Моно-состав: максимальный бонус фракции."]);
-  else if(cnt.w===4||cnt.t===4||cnt.a===4)fl.push(["wa","Четыре из пяти. До максимума не хватает одного героя нужной фракции — размен стоит около 4% урона."]);
-  if(hasC)fl.push(["ok",`Картер усиливает отряд на +16,5%: это ${fmt(buff*mult)} ед/сек сверх его собственного урона.`]);
-  if(sq.some(h=>h.id==="katya")&&sq.some(h=>h.id==="monroe"))fl.push(["ok","Связка Монро + Катя: срез защиты до −25%, и Монро бьёт сильнее. В расчёт это не входит, реальный урон выше."]);
-  const rad=sq.filter(h=>h.dmg==="Радиац.").length;
-  if(rad===0)fl.push(["wa","Весь урон физический. Соперник с физ-резистом закроется одним типом защиты."]);
-  if(rad===5)fl.push(["wa","Весь урон радиационный — та же уязвимость, только наоборот."]);
-  document.getElementById("flags").innerHTML=fl.map(([c,t])=>`<div class="flag ${c}">${t}</div>`).join("");
-
-  [...pw.children].forEach((b,i)=>b.classList.toggle("on",i===activePreset));
+ if(active!==undefined)activePreset=active;
+ const ids=state.slots;
+ if(new Set(ids).size<5){invalidSquad(ids);return;}
+ const r=evaluate(ids),{sq,cnt,mult,pct,fdesc,members,base,buff,total,noFaction}=r;
+ document.getElementById("out").innerHTML=`
+  <div class="stat"><div class="k">Бонус фракции</div><div class="v">${pct}</div><div class="n">${fdesc}</div></div>
+  <div class="stat"><div class="k">Состав</div><div class="v" style="font-size:15px;font-family:var(--ff-b)">${cnt.w}W · ${cnt.t}T · ${cnt.a}A</div><div class="n">Warrior · Tactical · Assault</div></div>
+  <div class="stat"><div class="k">Оценка урона</div><div class="v">${fmt(total)}</div><div class="n">${state.mode.toUpperCase()} · ед/сек</div></div>
+  <div class="stat"><div class="k">Без бонуса</div><div class="v">${fmt(noFaction)}</div><div class="n">бонус даёт +${fmt(total-noFaction)}</div></div>`;
+ const parts=members.map(m=>({nm:m.h.ru,f:fac(m.h),v:m.h.id==="carter"?m.dps+buff.value:m.dps}));
+ const mx=Math.max(...parts.map(p=>p.v))||1;
+ document.getElementById("bars").innerHTML=parts.sort((a,b)=>b.v-a.v).map(p=>{const col=p.f==="w"?"var(--war)":p.f==="t"?"var(--tac)":"var(--ass)";return `<div class="bar"><div class="nm">${p.nm}</div><div class="tr"><div class="fl" style="width:${(p.v/mx*100).toFixed(1)}%;background:${col}"></div></div><div class="vv">${fmt(p.v*mult)}</div></div>`;}).join("");
+ const fl=[],fw=sq.slice(0,2).filter(h=>h.pos!=="front").map(h=>h.ru),bw=sq.slice(2).filter(h=>h.pos!=="back").map(h=>h.ru);
+ if(fw.length)fl.push(["er",`${fw.join(" и ")} — тыловой герой на фронте.`]);
+ if(bw.length)fl.push(["er",`${bw.join(" и ")} — фронтовой герой в тылу.`]);
+ const tanks=sq.filter(h=>h.role==="Танк").length;if(tanks===0)fl.push(["wa","В отряде нет танков."]);
+ if(mult===1.20)fl.push(["ok","Моно-состав: максимальный бонус фракции."]);
+ else if(cnt.w===4||cnt.t===4||cnt.a===4)fl.push(["wa","Четыре из пяти: до максимума не хватает одного героя нужной фракции."]);
+ if(sq.some(h=>h.id==="carter")){
+  if(buff.cd===0)fl.push(["wa","Усиление Картера открывается с 5 уровня и сейчас не работает."]);
+  else fl.push(["ok",`Картер: +${fmtPct(buff.pct)} на ${Math.round(buff.duration)} с; с учётом перезарядки +${fmt(buff.value*mult)} ед/сек.`]);
+ }
+ if(sq.some(h=>h.id==="katya")&&sq.some(h=>h.id==="monroe"))fl.push(["ok","Связка Монро + Катя: снижение защиты не входит в число, реальная ценность может быть выше."]);
+ const rad=sq.filter(h=>h.dmg==="Радиац.").length;if(rad===0)fl.push(["wa","Весь урон физический."]);if(rad===5)fl.push(["wa","Весь урон радиационный."]);
+ if(state.mode==="pve"&&sq.some(h=>h.id==="victor"))fl.push(["ok","Витторе: оценка боя с гигантским захватчиком за 90 секунд."]);
+ document.getElementById("flags").innerHTML=fl.map(([c,t])=>`<div class="flag ${c}">${t}</div>`).join("");
+ document.getElementById("heroStats").innerHTML=members.map(m=>`<tr><td>${m.h.ru}</td><td>${m.c.level} ур. · ${m.c.stars}★</td><td class="n">${fmt(m.stats.attack)}</td><td class="n">${fmt(m.stats.hp)}</td><td class="n">${fmt(m.stats.defense)}</td><td>${gearLabel(m.c)}</td><td class="n">${fmt((m.h.id==="carter"?m.dps+buff.value:m.dps)*mult)}</td></tr>`).join("");
+ [...pw.children].forEach((b,i)=>b.classList.toggle("on",i===activePreset));
 }
-
-SL.forEach(([id],k)=>document.getElementById(id).value=PRE[0].s[k]);
-calc(0);
+function combinations(arr,k){const out=[];function walk(start,pick){if(pick.length===k){out.push(pick.slice());return;}for(let i=start;i<=arr.length-(k-pick.length);i++){pick.push(arr[i]);walk(i+1,pick);pick.pop();}}walk(0,[]);return out;}
+function optimize(){
+ const rec=document.getElementById("recommendation");rec.className="";
+ const fronts=H.filter(h=>h.pos==="front"&&state.heroes[h.id].owned),backs=H.filter(h=>h.pos==="back"&&state.heroes[h.id].owned);
+ if(fronts.length<2||backs.length<3){rec.className="err";rec.textContent="Отметьте минимум двух героев фронта и трёх героев тыла в разделе «Мои герои».";document.getElementById("roster").scrollIntoView({behavior:"smooth",block:"start"});return;}
+ const frontPairs=combinations(fronts,2),backTriples=combinations(backs,3);
+ const stat=h=>heroEstimate(h,state.heroes[h.id],1).stats;
+ const maxHp=Math.max(...frontPairs.map(pair=>pair.reduce((s,h)=>s+stat(h).hp,0)))*1.2;
+ const maxDef=Math.max(...frontPairs.map(pair=>pair.reduce((s,h)=>s+stat(h).defense,0)))*1.2;
+ let best=null;
+ for(const front of frontPairs)for(const back of backTriples){
+  const ids=[...front,...back].map(h=>h.id),r=evaluate(ids);
+  const hp=front.reduce((s,h,i)=>s+r.members[i].stats.hp,0),def=front.reduce((s,h,i)=>s+r.members[i].stats.defense,0);
+  const durability=Math.min(1,.5*(hp/maxHp+def/maxDef));
+  const score=state.mode==="pve"?r.total:r.total*(.7+.3*durability);
+  if(!best||score>best.score+1e-6||(Math.abs(score-best.score)<1e-6&&r.total>best.r.total))best={ids,r,score,durability};
+ }
+ state.slots=best.ids;activePreset=null;syncSlots();save();calc();
+ rec.textContent=state.mode==="pve"?`PvE: максимум оценки урона по зомби — ${fmt(best.score)}.`:`PvP: лучший баланс урона и стойкости фронта — рейтинг ${fmt(best.score)}.`;
+ document.querySelector(".calc").scrollIntoView({behavior:"smooth",block:"start"});
+}
+document.getElementById("optimize").addEventListener("click",optimize);
+syncAll();save();calc(0);
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
 </body>
 </html>
