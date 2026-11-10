@@ -54,3 +54,24 @@
   font-display: swap;
   src: url(./font-8.ttf) format('truetype');
 }
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(./noto-sans-regular.woff) format('woff');
+}
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url(./noto-sans-bold.woff) format('woff');
+}
+@font-face {
+  font-family: 'Noto Sans Display Condensed';
+  font-style: normal;
+  font-weight: 500 800;
+  font-display: swap;
+  src: url(./noto-display-condensed-bold.woff) format('woff');
+}
